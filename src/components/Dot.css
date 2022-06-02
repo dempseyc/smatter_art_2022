@@ -1,0 +1,9 @@
+.dot-position {
+  display: block;
+  position: absolute;
+}
+
+.dot-offset-radius {
+  position: relative;
+  display: block;
+}

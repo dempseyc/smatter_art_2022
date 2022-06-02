@@ -1,0 +1,97 @@
+.LayerButtons {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    align-items: start;
+    font-size: 1.5em;
+    text-align: center;
+    background-color: #000;
+    box-shadow: 0 -1px 0px 0px #ddd;
+}
+
+button {
+    appearance: none;
+}
+
+button.active-am {
+    background-color: #AAA;
+    border-top: 2px solid #ddd;
+    border-left: 2px solid #777;
+    border-right: 2px solid #777;
+    border-bottom: 2px solid #AAA;
+}
+
+button.active-am-not {
+    background-color: #AAA;
+    border-top: 2px solid #AAA;
+    border-left: 2px solid #777;
+    border-right: 2px solid #777;
+    border-bottom: 2px solid #777;
+    box-shadow: 0 -1px 0px 0px #ddd;
+}
+
+   /* for panels */
+.active-am:not(button) {
+    display: grid;
+}
+
+.active-am-not:not(button) {
+    display: none;
+}
+
+.LayerPanels {
+}
+
+.LayerPanel {
+    display: flex;
+    flex-direction: column;
+    height: 95%;
+    padding: 2%;
+    background-color: #AAA;
+    padding-top: 10px;
+    box-shadow: 0 -1px 1px 0px white;
+}
+
+.BlendModeChooser {
+    display: flex;
+    align-items: flex-start;
+    padding-top: 5%;
+}
+
+.DotColorChooser1 {
+
+}
+
+.DotColorChooser2 {
+
+}
+
+.DotSizeChooser {
+    padding-top: 5%;
+}
+.DotQtyChooser {
+    padding-top: 5%;
+
+}
+.DotAlgoChooser {
+    padding-top: 5%;
+}
+
+.style-button {
+    display: block;
+    width: 75px;
+    height: 75px;
+    background-size: cover;
+    background-position: center;
+}
+
+.style-button.am-chosen {
+    display: block;
+}
+
+.style-button.am-not-chosen {
+    display: none;
+}
+
+.style-button.expanded {
+    display: inline-block;
+}
