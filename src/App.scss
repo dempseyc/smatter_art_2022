@@ -1,38 +1,126 @@
+/*LAYOUT*/
+body {
+  overflow-x: hidden;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  color: black;
+  font-size: 4vw;
+  line-height: 1;
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+
+body::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
+  
+}
+
+h1 {
+  font-size: 2em;
+}
+
+.wrapper-1 {
+    display: grid;
+    width: 100vw;
+    height: 100vh;
+    grid-template-rows: 3em 2em 18em 5em 1fr;
+    grid-template-columns: 1fr 18em 0em 1fr;
+}
+
+.wrapper-2 {
+    position: absolute;
+    display: grid;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    grid-template-rows: 1em 1fr;
+    grid-template-columns: 0.5em 1fr 0.5em;
+    border: 4px solid yellowgreen;
+    background-color: lightslategray;
+    transition: top 1s ease 0s;
+}
+
+@media screen and (min-width:520px) {
+    body {
+        font-size: 3vw;
+        line-height: 1;
+    }
+
+    h1 {
+        font-size: 1.5em;
+    }
+
+    .wrapper-1 {
+        display: grid;
+        width: 50vw;
+        height: 100vh;
+        grid-template-rows: 3em 2em 15em 5em 1fr;
+        grid-template-columns: 1em 15em 0em 1em;
+    }
+
+    .wrapper-2 {
+        position: absolute;
+        display: grid;
+        left: 50vw;
+        width: 50vw;
+        height: 100vh;
+        grid-template-rows: 1em 1fr;
+        grid-template-columns: 0.5em 1fr 0.5em;
+        background-color: lightslategray;
+        transition: top 1s ease 0s;
+    }
+
+}
+/* end media screen min 520*/
+
+@media screen and (min-width:820px) {
+    body {
+        font-size: 2.5vw;
+    }
+    .wrapper-1 {
+        grid-template-rows: 3em 2em 12em 5em 1fr;
+        grid-template-columns: 1fr 12em 0em 1fr;
+    }
+
+    #board {
+        height: 12em;
+        width: 12em;
+    }
+}
+/* end media screen min 820 */
+
 .App {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
+.Container {
+  width: 100vw;
+  display: grid;
+  grid-auto-columns: 25% 25% 25% 1fr;
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+  .Editor {
+    position: relative;
+    grid-column: 4/5;
+    /* right: -2%; */
+    height: 100vh;
+    background-color: #AAA;
+    border: 4px solid #777;
+    border-left: 40px solid #777;
+    border-right: 30px solid #777;
   }
-}
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+  .Display {
+    position: relative;
+    grid-column: 1/4;
+    /* height: 100vh; */
+    border: 4px solid #777;
+    overflow: hidden;
   }
-  to {
-    transform: rotate(360deg);
-  }
+
 }
+
+// .DisplayLayer {
+//   height: 100%;
+//   mix-blend-mode: hard-light;
+  
+// }

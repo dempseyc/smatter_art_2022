@@ -1,0 +1,110 @@
+export function makeDotData(dotQtyInput = 15, setIndex = 0) {
+
+    let ranPos = (min, max) => Math.floor(Math.random() * max) + min ;
+    
+    let dotQty = dotQtyInput * 2;
+
+    let twinEatsTwin = (xPos, xPosT) => {
+        // remove twins in center 1/QtyTH portion of the area
+        return ( xPos-xPosT <= 200/dotQty );
+    }
+
+    let dotData = [];
+
+    let addDot = function (i, set, x, y) {
+        dotData.push({
+            idx: i,
+            dotSetIndex: set,
+            xPos: x, 
+            yPos: y
+        });
+    }
+
+    for(let i = 0; i<dotQty; i++) {
+        let yPos = ranPos(0,200)/2;
+        let xPos = ranPos(0,200)/2;
+        let xPosT = 100 - xPos;
+        if ( twinEatsTwin(xPos,xPosT) ) {
+            xPos = 50;
+            addDot(i, setIndex, xPos, yPos);
+        } else {
+            addDot(i, setIndex, xPos, yPos);
+            // this is the twin
+            addDot(i+1, setIndex, xPosT, yPos);
+            // not a mistake, skip an iteration
+            i++;
+        }
+    }
+
+    return dotData;
+
+} // end makeDotData
+
+export function findNs (currDot, dotsToConsider) {
+    let squareNum  = (num) => Math.pow(num, 2) ;
+
+    let dTC = [...dotsToConsider];
+    // take allDots array and fill in this.nn1 and this.nn2
+    // 20164 is based on square root of 2 times 100
+// why *2 ?
+    let nn1DistanceSqrd = 20164 * 2;
+    let nn2DistanceSqrd = 20164 * 2;
+    let nn3DistanceSqrd = 20164 * 2;
+
+    // find nn1
+    dTC.forEach((dot) => {
+        let iNxDistance = Math.abs(currDot.xPos - dot.xPos);
+        let iNyDistance = Math.abs(currDot.yPos - dot.yPos);
+        let iNDistanceSqrd = squareNum(iNxDistance) + squareNum(iNyDistance);
+        // if it's not me
+        if (dot.idx !== currDot.idx) {
+            // and nn2has not been set, set both
+            if (typeof(currDot.nn2) === 'undefined') {
+                // console.log('should happen once per dot', typeof(currDot.nn2));
+                currDot.nn2 = currDot;
+                currDot.nn3 = currDot;
+                // nn2DistanceSqrd = 0;
+                currDot.nn1 = dot;
+                nn1DistanceSqrd = iNDistanceSqrd;
+
+            }
+
+            if (iNDistanceSqrd <= nn1DistanceSqrd) {
+                // console.log('passed nn1 qualification')
+                currDot.nn1 = dot;
+                nn1DistanceSqrd = iNDistanceSqrd;
+            }
+        }
+    });
+    // find nn2
+    dTC.forEach((dot) => {
+        let iNxDistance = Math.abs(currDot.xPos - dot.xPos);
+        let iNyDistance = Math.abs(currDot.yPos - dot.yPos);
+        let iNDistanceSqrd = squareNum(iNxDistance) + squareNum(iNyDistance);
+        // if it's not me
+        if (iNDistanceSqrd !== 0) {
+            if (nn2DistanceSqrd > iNDistanceSqrd && iNDistanceSqrd >= nn1DistanceSqrd) {
+            // console.log('passed nn2qualification')
+            currDot.nn2= dot;
+            nn2DistanceSqrd = iNDistanceSqrd;
+            }
+        }
+    });
+    // find nn3
+    dTC.forEach((dot) => {
+        let iNxDistance = Math.abs(currDot.xPos - dot.xPos);
+        let iNyDistance = Math.abs(currDot.yPos - dot.yPos);
+        let iNDistanceSqrd = squareNum(iNxDistance) + squareNum(iNyDistance);
+        // if it's not me
+        if (iNDistanceSqrd !== 0) {
+            if (nn3DistanceSqrd > iNDistanceSqrd && iNDistanceSqrd >= nn2DistanceSqrd) {
+            // console.log('passed nn2qualification')
+            currDot.nn3= dot;
+            nn3DistanceSqrd = iNDistanceSqrd;
+            }
+        }
+    });
+
+    return currDot;
+
+} // end findNs

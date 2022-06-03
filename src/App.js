@@ -1,3 +1,4 @@
+import './CSSreset.css';
 import './App.scss';
 import Container from './components/Container';
 
