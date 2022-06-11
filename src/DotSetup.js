@@ -1,4 +1,4 @@
-export function makeDotData(dotQtyInput = 15, setIndex = 0) {
+export function makeDotData(dotQtyInput = 15, setIndex = 0, nextIdx) {
 
     let ranPos = (min, max) => Math.floor(Math.random() * max) + min ;
     
@@ -11,11 +11,12 @@ export function makeDotData(dotQtyInput = 15, setIndex = 0) {
 
     let dotData = [];
 
-    let addDot = function (i, set, x, y) {
+    let addDot = function (i, setIndex, x, y) {
         dotData.push({
             idx: i,
-            dotSetIndex: set,
-            xPos: x, 
+            dotSetIndex: setIndex,
+            strategy: 'orth',
+            xPos: x,
             yPos: y
         });
     }
@@ -26,11 +27,11 @@ export function makeDotData(dotQtyInput = 15, setIndex = 0) {
         let xPosT = 100 - xPos;
         if ( twinEatsTwin(xPos,xPosT) ) {
             xPos = 50;
-            addDot(i, setIndex, xPos, yPos);
+            addDot(nextIdx+i, setIndex, xPos, yPos);
         } else {
-            addDot(i, setIndex, xPos, yPos);
+            addDot(nextIdx+i, setIndex, xPos, yPos);
             // this is the twin
-            addDot(i+1, setIndex, xPosT, yPos);
+            addDot(nextIdx+i+1, setIndex, xPosT, yPos);
             // not a mistake, skip an iteration
             i++;
         }
@@ -40,11 +41,22 @@ export function makeDotData(dotQtyInput = 15, setIndex = 0) {
 
 } // end makeDotData
 
+export function newDotSet() {
+    return (
+        {
+            qty: 10,
+            size: 3,
+            color: 'black',
+            behavior: 'global',
+        }
+    )
+}
+
 export function findNs (currDot, dotsToConsider) {
     let squareNum  = (num) => Math.pow(num, 2) ;
 
     let dTC = [...dotsToConsider];
-    // take allDots array and fill in this.nn1 and this.nn2
+    // take dotsToConsider array and fill in this.nn1 and this.nn2
     // 20164 is based on square root of 2 times 100
 // why *2 ?
     let nn1DistanceSqrd = 20164 * 2;
@@ -82,10 +94,10 @@ export function findNs (currDot, dotsToConsider) {
         let iNyDistance = Math.abs(currDot.yPos - dot.yPos);
         let iNDistanceSqrd = squareNum(iNxDistance) + squareNum(iNyDistance);
         // if it's not me
-        if (iNDistanceSqrd !== 0) {
+        if (dot.idx !== currDot.idx) {
             if (nn2DistanceSqrd > iNDistanceSqrd && iNDistanceSqrd >= nn1DistanceSqrd) {
             // console.log('passed nn2qualification')
-            currDot.nn2= dot;
+            currDot.nn2 = dot;
             nn2DistanceSqrd = iNDistanceSqrd;
             }
         }
@@ -96,7 +108,7 @@ export function findNs (currDot, dotsToConsider) {
         let iNyDistance = Math.abs(currDot.yPos - dot.yPos);
         let iNDistanceSqrd = squareNum(iNxDistance) + squareNum(iNyDistance);
         // if it's not me
-        if (iNDistanceSqrd !== 0) {
+        if (dot.idx !== currDot.idx) {
             if (nn3DistanceSqrd > iNDistanceSqrd && iNDistanceSqrd >= nn2DistanceSqrd) {
             // console.log('passed nn2qualification')
             currDot.nn3= dot;

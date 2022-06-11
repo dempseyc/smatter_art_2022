@@ -1,9 +1,21 @@
 import './CSSreset.css';
 import './App.scss';
+
+import { makeDotData, findNs } from './DotSetup'
+import { setTargets, chooseStrategy} from './DotMover'
+
+import { useStoreState, useStoreActions } from 'easy-peasy';
+
 import Container from './components/Container';
 
 
-function App () {
+export default function App () {
+
+  useStoreActions( actions => actions.updateDotData(makeDotData(10,0,0)) );
+  let dots = useStoreState(state => state.dotData);
+  let dotsWithNeighbors = dots.map( dot => findNs(dot,dots) );
+  useStoreActions( actions => actions.updateDotData(dotsWithNeighbors) );
+
   return (
     <div className="App">
       <header className="App-header">
@@ -13,5 +25,3 @@ function App () {
     </div>
   );
 }
-
-export default App;

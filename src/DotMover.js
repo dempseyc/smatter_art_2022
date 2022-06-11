@@ -1,3 +1,5 @@
+//// use utils file
+
 //utils
 function ranPos(min,max) {
     return Math.floor(Math.random()*max)+min;
@@ -119,11 +121,13 @@ export function chooseStrategy (dot) {
     let tmDistSq = squareNum(dot.tmx - dot.xPos) + squareNum(dot.tmy - dot.yPos);
     let tcDistSq = squareNum(dot.tcx - dot.xPos) + squareNum(dot.tcy - dot.yPos);
     // target orth, unless center is closer
-    if (toDistSq <= tcDistSq) { dot.tx = dot.tox; dot.ty = dot.toy; }
+    if (toDistSq <= tcDistSq) { dot.tx = dot.tox; dot.ty = dot.toy; dot.strategy = 'orth'; }
     // if center is closer than orth, but midpoint closer than center, target midpoint
-    else if (tmDistSq <= tcDistSq) { dot.tx = dot.tmx; dot.ty = dot.tmy; }
+    else if (tmDistSq <= tcDistSq) { dot.tx = dot.tmx; dot.ty = dot.tmy; dot.strategy = 'midp';}
     // target center as last resort
-    else { dot.tx = dot.tcx; dot.ty = dot.tcy; }
+    else { dot.tx = dot.tcx; dot.ty = dot.tcy; dot.strategy = 'cent'; }
+
+    return dot;
 } // end chooseStrategy
 
 export function moveTowardTarget (dot) {
@@ -133,4 +137,5 @@ export function moveTowardTarget (dot) {
     // have a watcher / incrementer
     // when avg moveAmount falls below threshhold, stop calling it
     // maybe all this in an animation module
+    return dot;
 }

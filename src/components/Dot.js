@@ -1,53 +1,42 @@
 import React, { Component } from 'react';
 import './Dot.css';
 
-export default class Dot extends Component {
+export default function Dot (props) {
+  const { xPos, yPos, color, size } = props;
+  let pxSize = size * 10;
 
-  render() {
-    let innerColor = `rgba(${this.props.dotColor1.r},${this.props.dotColor1.g},${this.props.dotColor1.b},${this.props.dotColor1.a})`;
-    let outerColor = `rgba(${this.props.dotColor2.r},${this.props.dotColor2.g},${this.props.dotColor2.b},${this.props.dotColor2.a})`;
-    let outerOpacity = `${this.props.outerOpacity}`;
-    let dotStyle = this.props.dotStyle;
-    let radius = `${this.props.dotSize / 2}`;
-    let negRadius = `${0-this.props.dotSize / 2}`;
-    let dotSize = `${this.props.dotSize}`;
-    // let viewBox = `0 0 ${dotSize} ${dotSize}`;
-    let layer = this.props.layer;
-    let layerGradient = `${layer}-gradient`;
-    let lgURL = `url(#${layerGradient})`;
+  // ?? stringifying right away?
+  let radius = `${pxSize / 2}`;
+  let negRadius = `${0-pxSize / 2}`;
+  let dotSize = `${pxSize}`;
+  // let viewBox = `0 0 ${dotSize} ${dotSize}`;
 
-    return (
+  return (
+    <div
+    className="dot-position"
+    style={{
+      left: `${xPos}%`,
+      top: `${yPos}%`
+    }}>
       <div
-      className="dot-position"
-      style={{
-        left: `${this.props.position.xPos}%`,
-        top: `${this.props.position.yPos}%`
+        className="dot-offset-radius"
+        style={{
+          left: `${negRadius}px`,
+          top: `${negRadius}px`
       }}>
-        <div
-          className="dot-offset-radius"
-          style={{
-            left: `${negRadius}px`,
-            top: `${negRadius}px`
-        }}>
-          <svg
-            x={negRadius} 
-            y={negRadius}
-            width={dotSize}
-            height={dotSize} 
-            // viewBox={viewBox}
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <defs>
-              <radialGradient id={layerGradient}>
-                <stop offset="0%" stopColor={innerColor}/>
-                <stop offset="100%" stopColor={outerColor} stopOpacity={outerOpacity}/>
-              </radialGradient>
-            </defs>
+        <svg
+          x={negRadius} 
+          y={negRadius}
+          width={dotSize}
+          height={dotSize} 
+          // viewBox={viewBox}
+          xmlns="http://www.w3.org/2000/svg"
+        >
 
-            <circle fill={lgURL} cx={radius} cy={radius} r={radius}/>
-          </svg>
-        </div>
+          <circle fill={color} cx={radius} cy={radius} r={radius}/>
+
+        </svg>
       </div>
-    )
-  }
+    </div>
+  )
 }
