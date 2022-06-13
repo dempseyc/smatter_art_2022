@@ -8,6 +8,12 @@ function squareNum (num) {
     return Math.pow(num, 2);
 }
 
+/// need nearest point orthogonal to get 'rotation' angle
+/// except if dot gets to midpoint, that v3 vector will go to zero
+/// maybe stop resetting it when it gets too close
+/// possible pull out 'findXXX' functions so that after strategy is chosen
+/// only needs its one function
+
 export function setTargets (dot) {
 
     // p1 between nn1 and nn2
@@ -24,8 +30,8 @@ export function setTargets (dot) {
         let p2 = {}
 
         function findTarget () {
-            p2.x = (dot.nn1.xPos + dot.nn2.xPos + dot.nn3.xPos) * 0.33;
-            p2.y = (dot.nn1.yPos + dot.nn2.yPos + dot.nn3.yPos) * 0.33;
+            p2.x = (dot.nn1.xPos + dot.nn2.xPos + dot.nn3.xPos) * 0.333;
+            p2.y = (dot.nn1.yPos + dot.nn2.yPos + dot.nn3.yPos) * 0.333;
         }
 
         findTarget();
@@ -95,6 +101,9 @@ export function setTargets (dot) {
             // vector to closest point on v1 (p3)
             v3.x = dot.xPos - p3.x;
             v3.y = dot.yPos - p3.y;
+
+            // memo this vector to get a 'rotation' angle
+            dot.v3 = v3
 
             // shifting v3 to midpoint, thats the nice middle orthoganal
             p2.x = p1.x + v3.x;

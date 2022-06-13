@@ -1,5 +1,5 @@
-// import { notDeepEqual } from 'assert'
 import { createStore, action, computed } from 'easy-peasy'
+// import { notDeepEqual } from 'assert'
 // import { Reference } from 'eslint-scope'
 // import { update } from 'immutable'
 
@@ -22,6 +22,7 @@ export default createStore({
     dotData: [],
     editorState: {},
     editorMode: false,
+    animating: false,
 
     updateDotSets: action ((state, payload) => { state.dotSets = payload }),
     updateDotSet: action ((state, payload) => { state.dotSets[payload.index] = payload.dotSet }),

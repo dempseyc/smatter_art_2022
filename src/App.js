@@ -12,9 +12,14 @@ import Container from './components/Container';
 export default function App () {
 
   useStoreActions( actions => actions.updateDotData(makeDotData(10,0,0)) );
-  let dots = useStoreState(state => state.dotData);
-  let dotsWithNeighbors = dots.map( dot => findNs(dot,dots) );
-  useStoreActions( actions => actions.updateDotData(dotsWithNeighbors) );
+  let dots = useStoreState( state => state.dotData );
+  dots = dots.map( dot => findNs(dot,dots) );
+  useStoreActions( actions => actions.updateDotData(dots) );
+  dots = dots.map( dot => setTargets(dot,dots) );
+  useStoreActions( actions => actions.updateDotData(dots) );
+  dots = dots.map( dot => chooseStrategy(dot) );
+  useStoreActions( actions => actions.updateDotData(dots) );
+
 
   return (
     <div className="App">
