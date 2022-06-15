@@ -1,8 +1,24 @@
-import React, { Component } from 'react';
+// import {useState, useEffect} from 'react'
+
+import {useStoreState} from 'easy-peasy'
+import { useEffect } from 'react';
+
 import './Dot.css';
 
 export default function Dot (props) {
-  const { xPos, yPos, color, size } = props;
+  const { dot, color, size } = props;
+  // const stateData = useStoreState(state => state.dotData);
+  const xPos = dot.xPos;
+  const yPos = dot.yPos;
+
+  // useEffect(()=>{
+  //   console.log('update')
+  // },[stateData])
+
+  if (dot.idx === 0) {
+    console.log('dot0 render',xPos,yPos);
+
+  } //
   let pxSize = size * 10;
 
   // ?? stringifying right away?

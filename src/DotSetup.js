@@ -1,12 +1,10 @@
-export function makeDotData(dotQtyInput = 15, setIndex = 0, nextIdx) {
+export function makeDotData(dotQty = 15, setIndex = 0, nextIdx) {
 
     let ranPos = (min, max) => Math.floor(Math.random() * max) + min ;
-    
-    let dotQty = dotQtyInput * 2;
 
     let twinEatsTwin = (xPos, xPosT) => {
         // remove twins in center 1/QtyTH portion of the area
-        return ( xPos-xPosT <= 200/dotQty );
+        return ( Math.abs(xPos-xPosT) <= 50/dotQty );
     }
 
     let dotData = [];
@@ -21,7 +19,7 @@ export function makeDotData(dotQtyInput = 15, setIndex = 0, nextIdx) {
         });
     }
 
-    for(let i = 0; i<dotQty; i++) {
+    for(let i = 0; i<dotQty-1; i++) {
         let yPos = ranPos(0,200)/2;
         let xPos = ranPos(0,200)/2;
         let xPosT = 100 - xPos;
@@ -73,8 +71,8 @@ export function findNs (currDot, dotsToConsider) {
             // and nn2has not been set, set both
             if (typeof(currDot.nn2) === 'undefined') {
                 // console.log('should happen once per dot', typeof(currDot.nn2));
-                currDot.nn2 = currDot;
-                currDot.nn3 = currDot;
+                currDot.nn2 = dot;
+                currDot.nn3 = dot;
                 // nn2DistanceSqrd = 0;
                 currDot.nn1 = dot;
                 nn1DistanceSqrd = iNDistanceSqrd;
@@ -95,7 +93,7 @@ export function findNs (currDot, dotsToConsider) {
         let iNDistanceSqrd = squareNum(iNxDistance) + squareNum(iNyDistance);
         // if it's not me
         if (dot.idx !== currDot.idx) {
-            if (nn2DistanceSqrd > iNDistanceSqrd && iNDistanceSqrd >= nn1DistanceSqrd) {
+            if (nn2DistanceSqrd > iNDistanceSqrd && iNDistanceSqrd > nn1DistanceSqrd) {
             // console.log('passed nn2qualification')
             currDot.nn2 = dot;
             nn2DistanceSqrd = iNDistanceSqrd;
@@ -109,7 +107,7 @@ export function findNs (currDot, dotsToConsider) {
         let iNDistanceSqrd = squareNum(iNxDistance) + squareNum(iNyDistance);
         // if it's not me
         if (dot.idx !== currDot.idx) {
-            if (nn3DistanceSqrd > iNDistanceSqrd && iNDistanceSqrd >= nn2DistanceSqrd) {
+            if (nn3DistanceSqrd > iNDistanceSqrd && iNDistanceSqrd > nn2DistanceSqrd) {
             // console.log('passed nn2qualification')
             currDot.nn3= dot;
             nn3DistanceSqrd = iNDistanceSqrd;

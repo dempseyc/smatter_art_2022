@@ -13,6 +13,7 @@ const bySet = function (dots) {
 }
 
 export default createStore({
+    frame: 0,
     dotSets: [{
         qty: 10,
         size: 3,
@@ -22,18 +23,23 @@ export default createStore({
     dotData: [],
     editorState: {},
     editorMode: false,
-    animating: false,
+    updatedAt: Date.now(),
 
+    stepFrame: action ((state, payload) => { state.frame = payload }),
+    
     updateDotSets: action ((state, payload) => { state.dotSets = payload }),
     updateDotSet: action ((state, payload) => { state.dotSets[payload.index] = payload.dotSet }),
-
-    updateDotData: action ((state, payload) => { state.dotData = payload }),
+    
+    updateDotData: action ((state, payload) => { 
+        state.updatedAt = Date.now();
+        state.dotData = payload;
+      }),
     updateDot: action ((state, payload) => { state.dotData[payload.index] = payload.dot}),
-
+    
     updateEditorState: action ((state,payload) => {state.editorState[payload.param] = payload.value}),
     updateEditorMode: action ((state,payload) => {state.editorMode = payload}),
 
-    dotsBySet: computed((state) => bySet(state.dotData) ),
+    dotsBySet: computed((state) => bySet(state.dotData))
 
   })
 

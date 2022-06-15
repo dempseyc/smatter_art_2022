@@ -1,7 +1,5 @@
-//// use utils file
-
 //utils
-function ranPos(min,max) {
+function ranMM(min,max) {
     return Math.floor(Math.random()*max)+min;
 }
 function squareNum (num) {
@@ -64,6 +62,7 @@ export function setTargets (dot) {
         let v2n = {};
 
         p1 = findMidpoint();
+        // dot.p1 = p1;
         // console.log(p1);
 
         function findTarget () {
@@ -85,6 +84,7 @@ export function setTargets (dot) {
             // let dp = Math.abs(v1n.x * v2n.x + v1n.y * v2n.y);
             let dp = v1n.x * v2n.x + v1n.y * v2n.y;
 
+
             let theta = Math.acos(dp);
 
             // having angle theta and hypoteneuse v2, we can get length of adjacent
@@ -103,7 +103,7 @@ export function setTargets (dot) {
             v3.y = dot.yPos - p3.y;
 
             // memo this vector to get a 'rotation' angle
-            dot.v3 = v3
+            dot.v3 = v3;
 
             // shifting v3 to midpoint, thats the nice middle orthoganal
             p2.x = p1.x + v3.x;
@@ -147,4 +147,16 @@ export function moveTowardTarget (dot) {
     // when avg moveAmount falls below threshhold, stop calling it
     // maybe all this in an animation module
     return dot;
+}
+
+export function trackAnim (dots) {
+    let ranDotIndex = ranMM(0,dots.length-1);
+    let distSq = 0;
+    dots.forEach(function (dot, i) {
+        if (i === ranDotIndex) {
+            distSq = squareNum(dot.xPos-dot.tx)+squareNum(dot.yPos-dot.ty);
+        }
+        moveTowardTarget(dot);
+    })
+    return {dots,distSq};
 }
