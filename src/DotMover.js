@@ -12,13 +12,13 @@ function squareNum (num) {
 /// possible pull out 'findXXX' functions so that after strategy is chosen
 /// only needs its one function
 
-export function setTargets (dot) {
+export function setTargets (dot, dots) {
 
-    // p1 between nn1 and nn2
+    // p1 between nn1 and dot.nn2
     let findMidpoint  = function () {
         // console.log(dot);
-        dot.tmx = (dot.nn2.xPos + dot.nn1.xPos) * 0.5 ;
-        dot.tmy = (dot.nn2.yPos + dot.nn1.yPos) * 0.5 ;
+        dot.tmx = (dots[dot.nn2].xPos + dots[dot.nn1].xPos) * 0.5 ;
+        dot.tmy = (dots[dot.nn2].yPos + dots[dot.nn1].yPos) * 0.5 ;
         return { x: dot.tmx, y: dot.tmy};
     }
 
@@ -28,8 +28,8 @@ export function setTargets (dot) {
         let p2 = {}
 
         function findTarget () {
-            p2.x = (dot.nn1.xPos + dot.nn2.xPos + dot.nn3.xPos) * 0.333;
-            p2.y = (dot.nn1.yPos + dot.nn2.yPos + dot.nn3.yPos) * 0.333;
+            p2.x = (dots[dot.nn1].xPos + dots[dot.nn2].xPos + dots[dot.nn3].xPos) * 0.333;
+            p2.y = (dots[dot.nn1].yPos + dots[dot.nn2].yPos + dots[dot.nn3].yPos) * 0.333;
         }
 
         findTarget();
@@ -37,7 +37,7 @@ export function setTargets (dot) {
         dot.tcx = p2.x;
         dot.tcy = p2.y;
     }
-        // target nearest point to orthogonal of nn1->nn2
+        // target nearest point to orthogonal of nn1->dot.nn2
     let findNearestPointOrthogonal = function  () {
 
         // midpoint
@@ -46,7 +46,7 @@ export function setTargets (dot) {
         let p2 = {};
         // closest point on v1 to dot
         let p3 = {};
-        // from nn1 to nn2
+        // from nn1 to dot.nn2
         let v1 = {};
         // from nn1 to p3
         let v1a = {};
@@ -66,17 +66,17 @@ export function setTargets (dot) {
         // console.log(p1);
 
         function findTarget () {
-            // nn1 to nn2
-            v1.x = dot.nn2.xPos - dot.nn1.xPos;
-            v1.y = dot.nn2.yPos - dot.nn1.yPos;
+            // nn1 to dot.nn2
+            v1.x = dots[dot.nn2].xPos - dots[dot.nn1].xPos;
+            v1.y = dots[dot.nn2].yPos - dots[dot.nn1].yPos;
             v1.mag = Math.sqrt(squareNum(v1.x)+squareNum(v1.y));
             v1n.x = v1.x / v1.mag;
             v1n.y = v1.y / v1.mag;
             // nn1 to dot
             // here we can determine which quadrant is nn1 in compared to dot
             // the process for getting p3 will be determined by the quadrant
-            v2.x = dot.xPos - dot.nn1.xPos;
-            v2.y = dot.yPos - dot.nn1.yPos;
+            v2.x = dot.xPos - dots[dot.nn1].xPos;
+            v2.y = dot.yPos - dots[dot.nn1].yPos;
             v2.mag = Math.sqrt(squareNum(v2.x)+squareNum(v2.y));
             v2n.x = v2.x / v2.mag;
             v2n.y = v2.y / v2.mag;
@@ -95,19 +95,25 @@ export function setTargets (dot) {
             v1a.mag = adjacent;
             v1a.x = v1n.x * v1a.mag;
             v1a.y = v1n.y * v1a.mag;
-            p3.x = dot.nn1.xPos + v1a.x;
-            p3.y = dot.nn1.yPos + v1a.y;
+            p3.x = dots[dot.nn1].xPos + v1a.x;
+            p3.y = dots[dot.nn1].yPos + v1a.y;
 
             // vector to closest point on v1 (p3)
-            v3.x = dot.xPos - p3.x;
-            v3.y = dot.yPos - p3.y;
+            // v3.x = dot.xPos - p3.x;
+            // v3.y = dot.yPos - p3.y;
+            // believe this!
+            v3.x = p3.x - dot.xPos;
+            v3.y = p3.y - dot.yPos; //see
 
             // memo this vector to get a 'rotation' angle
             dot.v3 = v3;
 
             // shifting v3 to midpoint, thats the nice middle orthoganal
-            p2.x = p1.x + v3.x;
-            p2.y = p1.y + v3.y;
+            // p2.x = p1.x + v3.x;
+            // p2.y = p1.y + v3.y;
+            // believe this!
+            p2.x = p1.x - v3.x;
+            p2.y = p1.y - v3.y; //see
 
         }
 
@@ -140,8 +146,8 @@ export function chooseStrategy (dot) {
 } // end chooseStrategy
 
 export function moveTowardTarget (dot) {
-    dot.xPos = dot.xPos + (dot.tx - dot.xPos) * 0.3;
-    dot.yPos = dot.yPos + (dot.ty - dot.yPos) * 0.3;
+    dot.xPos = dot.xPos + (dot.tx - dot.xPos) * 0.2;
+    dot.yPos = dot.yPos + (dot.ty - dot.yPos) * 0.2;
     // need to capture some random moveAmounts, like every X times it's called
     // have a watcher / incrementer
     // when avg moveAmount falls below threshhold, stop calling it
@@ -156,6 +162,7 @@ export function trackAnim (dots) {
         if (i === ranDotIndex) {
             distSq = squareNum(dot.xPos-dot.tx)+squareNum(dot.yPos-dot.ty);
         }
+        setTargets(dot,dots);
         moveTowardTarget(dot);
     })
     return {dots,distSq};

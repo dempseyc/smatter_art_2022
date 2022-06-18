@@ -4,7 +4,7 @@ import { trackAnim } from './DotMover'
 
 import { useStoreState, useStoreActions } from 'easy-peasy';
 
-const delayFrame = 500; // ms 
+const delayFrame = 50; // ms 
 
 const useAnimationFrame = callback => {
 

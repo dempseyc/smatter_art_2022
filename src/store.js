@@ -13,6 +13,7 @@ const bySet = function (dots) {
 }
 
 export default createStore({
+    init: false,
     frame: 0,
     dotSets: [{
         qty: 10,
@@ -29,10 +30,27 @@ export default createStore({
     
     updateDotSets: action ((state, payload) => { state.dotSets = payload }),
     updateDotSet: action ((state, payload) => { state.dotSets[payload.index] = payload.dotSet }),
+
+    initDotData: action ((state, payload) => { 
+      state.init = true;
+      state.updatedAt = Date.now();
+      state.dotData = payload; //not works
+      console.log(payload);
+      // state.dotData = payload.map(i => i);  //not works
+      // state.dotData = JSON.parse(JSON.stringify(payload)); //not works
+      // console.log(JSON.parse(JSON.stringify(payload)));
+    }),
+
+    reset: action ((state, payload) => {
+      state.init = false;
+      state.updatedAt = Date.now();
+      state.dotData = [];
+      console.log(payload);
+    }),
     
     updateDotData: action ((state, payload) => { 
         state.updatedAt = Date.now();
-        state.dotData = payload;
+        state.dotData = payload; //get anim?
       }),
     updateDot: action ((state, payload) => { state.dotData[payload.index] = payload.dot}),
     

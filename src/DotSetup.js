@@ -71,17 +71,17 @@ export function findNs (currDot, dotsToConsider) {
             // and nn2has not been set, set both
             if (typeof(currDot.nn2) === 'undefined') {
                 // console.log('should happen once per dot', typeof(currDot.nn2));
-                currDot.nn2 = dot;
-                currDot.nn3 = dot;
+                currDot.nn2 = dot.idx;
+                currDot.nn3 = dot.idx;
                 // nn2DistanceSqrd = 0;
-                currDot.nn1 = dot;
+                currDot.nn1 = dot.idx;
                 nn1DistanceSqrd = iNDistanceSqrd;
 
             }
 
             if (iNDistanceSqrd <= nn1DistanceSqrd) {
                 // console.log('passed nn1 qualification')
-                currDot.nn1 = dot;
+                currDot.nn1 = dot.idx;
                 nn1DistanceSqrd = iNDistanceSqrd;
             }
         }
@@ -95,7 +95,7 @@ export function findNs (currDot, dotsToConsider) {
         if (dot.idx !== currDot.idx) {
             if (nn2DistanceSqrd > iNDistanceSqrd && iNDistanceSqrd > nn1DistanceSqrd) {
             // console.log('passed nn2qualification')
-            currDot.nn2 = dot;
+            currDot.nn2 = dot.idx;
             nn2DistanceSqrd = iNDistanceSqrd;
             }
         }
@@ -109,7 +109,7 @@ export function findNs (currDot, dotsToConsider) {
         if (dot.idx !== currDot.idx) {
             if (nn3DistanceSqrd > iNDistanceSqrd && iNDistanceSqrd > nn2DistanceSqrd) {
             // console.log('passed nn2qualification')
-            currDot.nn3= dot;
+            currDot.nn3 = dot.idx;
             nn3DistanceSqrd = iNDistanceSqrd;
             }
         }

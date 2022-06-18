@@ -1,37 +1,26 @@
-import { useRef, useEffect } from 'react'
 import { useStoreState } from 'easy-peasy';
 import Dot from './Dot'
 
 export default function DisplayLayer (props) {
-	const dots = useStoreState( state => state.dotData );
-	const updatedAt = useStoreState( state => state.updatedAt);
-	const prevUpdate = useRef()
+	const dotData = useStoreState( state => state.dotData );
 
-	let makeDots = function (updatedAt) {
+	let makeDots = function (dots) {
+		console.log('dl makedots');
 		return dots.map(function (d,i) {
 			return (
 				<Dot
-				key={`d-${i}`}
-				size={3}
-				color='black'
-				dot={d}
+					key={`d-${i}`}
+					size={1}
+					color='black'
+					dot={d}
 				/>
 				)
 			})
-		}
-		
-	let display = () => makeDots(updatedAt)
-
-	useEffect(() => {
-		if (prevUpdate.current !== updatedAt) {
-			display = makeDots(updatedAt);
-			prevUpdate.current = updatedAt;
-		}
-	},[updatedAt])
+	}
 		
 	return (
 		<div className="DisplayLayer">
-		{display()}
+		{makeDots(dotData)}
 		</div>
 	)
 }

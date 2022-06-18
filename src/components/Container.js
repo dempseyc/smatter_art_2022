@@ -7,19 +7,23 @@ import Display from './Display'
 import EditorToggle from './EditorToggle'
 
 export default function Container () {
-    return (
+    const init = useStoreState(state => state.init);
+    const numSets = useStoreState(state => state.dotSets.length);
+    const editorMode = useStoreState( state => state.editorMode);
+    console.log('display', init);
+    return ( (init) ?
       <div className="Container">
         <Display
-            numSets={useStoreState( state => state.dotSets.length)}
+            numSets={numSets}
         />
         {/* <Editor
             numSets={useStoreState( state => state.dotSets.length)}
             editorMode={useStoreState( state => state.editorMode)}
         /> */}
         <EditorToggle
-            editorMode={useStoreState( state => state.editorMode)}
-            updateEditorMode={useStoreActions((actions) => actions.updateEditorMode)}
+            editorMode={editorMode}
         />
       </div>
+      : null
     )
 }

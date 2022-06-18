@@ -1,58 +1,52 @@
-// import {useState, useEffect} from 'react'
+import React from 'react'
 
 import {useStoreState} from 'easy-peasy'
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 
 import './Dot.css';
 
-export default function Dot (props) {
-  const { dot, color, size } = props;
-  // const stateData = useStoreState(state => state.dotData);
-  const xPos = dot.xPos;
-  const yPos = dot.yPos;
+const Dot = (props) => {
+	const { dot, color, size } = props;
 
-  // useEffect(()=>{
-  //   console.log('update')
-  // },[stateData])
+	const xPos = useStoreState(state => state.dotData[dot.idx].xPos);
+	const yPos = useStoreState(state => state.dotData[dot.idx].yPos);
 
-  if (dot.idx === 0) {
-    console.log('dot0 render',xPos,yPos);
+	let pxSize = size * 10;
 
-  } //
-  let pxSize = size * 10;
+	let radius = `${pxSize / 2}`;
+	let negRadius = `${0-pxSize / 2}`;
+	let dotSize = `${pxSize}`;
+	// let viewBox = `0 0 ${dotSize} ${dotSize}`;
 
-  // ?? stringifying right away?
-  let radius = `${pxSize / 2}`;
-  let negRadius = `${0-pxSize / 2}`;
-  let dotSize = `${pxSize}`;
-  // let viewBox = `0 0 ${dotSize} ${dotSize}`;
+	return (
+		<div
+		className={`${dot.idx} ${dot.nn1}${dot.nn2}${dot.nn3} ${dot.strategy} dot-position`}
+		style={{
+		left: `${xPos}%`,
+		top: `${yPos}%`
+		}}>
+		{/* <span>{`x: ${xPos},y: ${yPos}, ${updatedAt}`}</span> */}
+		<div
+			className="dot-offset-radius"
+			style={{
+			left: `${negRadius}px`,
+			top: `${negRadius}px`
+		}}>
+			<svg
+			x={negRadius} 
+			y={negRadius}
+			width={dotSize}
+			height={dotSize} 
+			// viewBox={viewBox}
+			xmlns="http://www.w3.org/2000/svg"
+			>
 
-  return (
-    <div
-    className="dot-position"
-    style={{
-      left: `${xPos}%`,
-      top: `${yPos}%`
-    }}>
-      <div
-        className="dot-offset-radius"
-        style={{
-          left: `${negRadius}px`,
-          top: `${negRadius}px`
-      }}>
-        <svg
-          x={negRadius} 
-          y={negRadius}
-          width={dotSize}
-          height={dotSize} 
-          // viewBox={viewBox}
-          xmlns="http://www.w3.org/2000/svg"
-        >
+			<circle fill={color} cx={radius} cy={radius} r={radius}/>
 
-          <circle fill={color} cx={radius} cy={radius} r={radius}/>
-
-        </svg>
-      </div>
-    </div>
-  )
+			</svg>
+		</div>
+		</div>
+	)
 }
+
+export default Dot

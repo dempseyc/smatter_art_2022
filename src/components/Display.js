@@ -1,14 +1,10 @@
 // import React, { Component } from 'react'
 import { useStoreState } from 'easy-peasy';
-
-// import { useStore } from 'easy-peasy'
 import DisplayLayer from './DisplayLayer'
 
 
 export default function Display (props) {
-	// let frame = useStoreState(state => state.frame);
-	const {numSets} = props
-	const frame = useStoreState(state => state.frame);
+	const numSets = useStoreState(state => state.dotSets.length);
 
 	let makeLayer = function (i) {
 		return (
@@ -16,7 +12,6 @@ export default function Display (props) {
 				key={`dl-${i}`}
 				layerNum={i}
 				numlayers={numSets}
-				frame={frame}
 			/>
 		)
 	}

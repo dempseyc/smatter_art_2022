@@ -11,12 +11,14 @@ import { useStoreState, useStoreActions } from 'easy-peasy';
 import Container from './components/Container';
 import Animator from './Animator';
 
-
-export default function App () {
+const DataHandler = () => {
+	let dots = useStoreState(state => state.dotData);
+	const minMove = 1/dots.length
 
 	const currMoveAmtSq = useRef();
 	const animOn = useRef()
     const updateDots = useStoreActions(actions => actions.updateDotData);
+
 	const stopAnim = () => {
 		animOn.current = false;
 		console.log('stopped');
@@ -24,7 +26,7 @@ export default function App () {
 
 	const computeCurrMoveAmtSq = (val) => {
         if (currMoveAmtSq.current != undefined) {
-            if (currMoveAmtSq.current <= 5) {
+            if (currMoveAmtSq.current <= minMove) {
                 // currMoveAmtSq.current = 0;
 				stopAnim();
             } else {
@@ -39,19 +41,10 @@ export default function App () {
 	const animate = () => {
 		let data = trackAnim(dots);
         computeCurrMoveAmtSq(data.distSq);
-		console.log(data.distSq);
-        updateDots(data.dots);
+        // updateDots(JSON.parse(JSON.stringify(data.dots))); // dont do
+		updateDots(data.dots);
 	}
 
-	const animator = () => {
-		return (
-			animOn.current ? 
-			<Animator 
-			  effect={animate}
-			/> 
-			: null
-		)
-	}
 	const startAnim = () => {
 		animOn.current = true;
 	}
@@ -59,32 +52,47 @@ export default function App () {
 	const updatePrev = useRef();
 	
 	useEffect(() => {
-		if (updatePrev.current !== updatedAt) {
+		if (updatePrev.current === undefined || updatePrev.current !== updatedAt) {
 			updatePrev.current = updatedAt;
 			if (!animOn.current ) { startAnim(); }
 		}
 	},[updatedAt, animOn])
 
+	return (
+		animOn.current ? 
+		<Animator 
+		  effect={animate}
+		/> 
+		: null
+	)
+}
 
-	useStoreActions(actions => actions.updateDotData(makeDotData(10,0,0)));
-	let dots = useStoreState(state => state.dotData);
+const DotMaker = () => {
+	const init = useStoreActions(actions => actions.initDotData);
+	const reset = useStoreActions(actions => actions.reset);
 
-	dots = dots.map(dot => findNs(dot,dots));
-	// useStoreActions(actions => actions.updateDotData(dots));
-	dots = dots.map(dot => setTargets(dot,dots));
-	// useStoreActions(actions => actions.updateDotData(dots));
-	dots = dots.map(dot => chooseStrategy(dot));
-	// useStoreActions(actions => actions.updateDotData(dots));
+	useEffect(() => {
+		let dots = makeDotData(400,0,0);
+			dots = dots.map(dot => findNs(dot,dots));
+			dots = dots.map(dot => setTargets(dot,dots));
+			dots = dots.map(dot => chooseStrategy(dot));
+			init(dots);
+		return reset;
+		
+	}, [])
+	return (<DataHandler />)
+}
 
-	console.log(useStoreState(state => state.dotData));
-
+export default function App () {
+	
+	// let dots = useStoreState(state => state.dotData);
 	return (
 		<div className="App">
 			<header className="App-header">
 				<h1 className="App-title">SMATTER_art</h1>
 			</header>
+			<DotMaker />
 			<Container />
-			{animator()}
 		</div>
 	);
 }
