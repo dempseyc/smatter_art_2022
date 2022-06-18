@@ -98,12 +98,9 @@ export function setTargets (dot, dots) {
             p3.x = dots[dot.nn1].xPos + v1a.x;
             p3.y = dots[dot.nn1].yPos + v1a.y;
 
-            // vector to closest point on v1 (p3)
-            // v3.x = dot.xPos - p3.x;
-            // v3.y = dot.yPos - p3.y;
-            // believe this!
-            v3.x = p3.x - dot.xPos;
-            v3.y = p3.y - dot.yPos; //see
+            // vector from closest point on v1 (p3)
+            v3.x = dot.xPos - p3.x;
+            v3.y = dot.yPos - p3.y;
 
             // memo this vector to get a 'rotation' angle
             dot.v3 = v3;
@@ -132,6 +129,13 @@ export function setTargets (dot, dots) {
 } // end set targets
      
 export function chooseStrategy (dot) {
+    
+    if (dot.strategy === 'stay') {
+        dot.tx = dot.xPos;
+        dot.ty = dot.yPos;
+        return dot;
+    }
+
     let toDistSq = squareNum(dot.tox - dot.xPos) + squareNum(dot.toy - dot.yPos);
     let tmDistSq = squareNum(dot.tmx - dot.xPos) + squareNum(dot.tmy - dot.yPos);
     let tcDistSq = squareNum(dot.tcx - dot.xPos) + squareNum(dot.tcy - dot.yPos);

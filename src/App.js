@@ -72,7 +72,7 @@ const DotMaker = () => {
 	const reset = useStoreActions(actions => actions.reset);
 
 	useEffect(() => {
-		let dots = makeDotData(400,0,0);
+		let dots = makeDotData(200,0,0);
 			dots = dots.map(dot => findNs(dot,dots));
 			dots = dots.map(dot => setTargets(dot,dots));
 			dots = dots.map(dot => chooseStrategy(dot));

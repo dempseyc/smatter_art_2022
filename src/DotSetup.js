@@ -4,18 +4,19 @@ export function makeDotData(dotQty = 15, setIndex = 0, nextIdx) {
 
     let twinEatsTwin = (xPos, xPosT) => {
         // remove twins in center 1/QtyTH portion of the area
-        return ( Math.abs(xPos-xPosT) <= 50/dotQty );
+        return ( Math.abs(xPos-xPosT) <= 100/dotQty );
     }
 
     let dotData = [];
 
-    let addDot = function (i, setIndex, x, y) {
+    let addDot = function (i, setIndex, x, y, xTwin) {
         dotData.push({
             idx: i,
             dotSetIndex: setIndex,
-            strategy: 'orth',
+            strategy: (!xTwin) ? 'stay' : 'orth',
             xPos: x,
-            yPos: y
+            yPos: y,
+            xTwin: xTwin
         });
     }
 
@@ -25,11 +26,14 @@ export function makeDotData(dotQty = 15, setIndex = 0, nextIdx) {
         let xPosT = 100 - xPos;
         if ( twinEatsTwin(xPos,xPosT) ) {
             xPos = 50;
-            addDot(nextIdx+i, setIndex, xPos, yPos);
+            let yPosT = 100 - yPos;
+            addDot(nextIdx+i, setIndex, xPos, yPos, false);
+            addDot(nextIdx+i+1, setIndex, xPos, yPosT, false);
+            i++
         } else {
-            addDot(nextIdx+i, setIndex, xPos, yPos);
+            addDot(nextIdx+i, setIndex, xPos, yPos, true);
             // this is the twin
-            addDot(nextIdx+i+1, setIndex, xPosT, yPos);
+            addDot(nextIdx+i+1, setIndex, xPosT, yPos, true);
             // not a mistake, skip an iteration
             i++;
         }
@@ -68,24 +72,54 @@ export function findNs (currDot, dotsToConsider) {
         let iNDistanceSqrd = squareNum(iNxDistance) + squareNum(iNyDistance);
         // if it's not me
         if (dot.idx !== currDot.idx) {
+            // and i'm not a center dot
+            if (currDot.xTwin) {                
+                if (typeof(currDot.nn2) === 'undefined') {
+                    // console.log('should happen once per dot', typeof(currDot.nn2));
+                    currDot.nn2 = dot.idx;
+                    currDot.nn3 = dot.idx;
+                    // nn2DistanceSqrd = 0;
+                    currDot.nn1 = dot.idx;
+                    nn1DistanceSqrd = iNDistanceSqrd;
+    
+                }
+    
+                if (iNDistanceSqrd <= nn1DistanceSqrd) {
+                    // console.log('passed nn1 qualification')
+                    currDot.nn1 = dot.idx;
+                    nn1DistanceSqrd = iNDistanceSqrd;
+                }
+                // if i am a center dot, do stuff for all dots not also center dots
+            } else {
+                if (dot.xTwin) {
+                    if (typeof(currDot.nn2) === 'undefined') {
+                        // console.log('should happen once per dot', typeof(currDot.nn2));
+                        currDot.nn2 = dot.idx;
+                        currDot.nn3 = dot.idx;
+                        // nn2DistanceSqrd = 0;
+                        currDot.nn1 = dot.idx;
+                        nn1DistanceSqrd = iNDistanceSqrd;
+        
+                    }
+        
+                    if (iNDistanceSqrd <= nn1DistanceSqrd) {
+                        // console.log('passed nn1 qualification')
+                        currDot.nn1 = dot.idx;
+                        nn1DistanceSqrd = iNDistanceSqrd;
+                    }
+                }
+            }
             // and nn2has not been set, set both
-            if (typeof(currDot.nn2) === 'undefined') {
-                // console.log('should happen once per dot', typeof(currDot.nn2));
-                currDot.nn2 = dot.idx;
-                currDot.nn3 = dot.idx;
-                // nn2DistanceSqrd = 0;
-                currDot.nn1 = dot.idx;
-                nn1DistanceSqrd = iNDistanceSqrd;
-
-            }
-
-            if (iNDistanceSqrd <= nn1DistanceSqrd) {
-                // console.log('passed nn1 qualification')
-                currDot.nn1 = dot.idx;
-                nn1DistanceSqrd = iNDistanceSqrd;
-            }
         }
     });
+
+    // the nn1 should have been set to second twin with '<=', so make nn 2 first twin
+    if (!currDot.xTwin) {
+        currDot.nn2 = currDot.nn1-1;
+        currDot.nn3 = currDot.idx;
+        // and exit
+        return currDot;
+    }
     // find nn2
     dTC.forEach((dot) => {
         let iNxDistance = Math.abs(currDot.xPos - dot.xPos);
