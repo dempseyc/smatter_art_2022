@@ -41,7 +41,6 @@ const DataHandler = () => {
 	const animate = () => {
 		let data = trackAnim(dots);
         computeCurrMoveAmtSq(data.distSq);
-        // updateDots(JSON.parse(JSON.stringify(data.dots))); // dont do
 		updateDots(data.dots);
 	}
 
@@ -54,9 +53,12 @@ const DataHandler = () => {
 	useEffect(() => {
 		if (updatePrev.current === undefined || updatePrev.current !== updatedAt) {
 			updatePrev.current = updatedAt;
-			if (!animOn.current ) { startAnim(); }
 		}
-	},[updatedAt, animOn])
+	},[animOn])
+
+	useEffect(() => {
+		if (!animOn.current ) { startAnim(); }
+	},[])
 
 	return (
 		animOn.current ? 
@@ -85,7 +87,6 @@ const DotMaker = () => {
 
 export default function App () {
 	
-	// let dots = useStoreState(state => state.dotData);
 	return (
 		<div className="App">
 			<header className="App-header">
