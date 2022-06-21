@@ -24,6 +24,10 @@ export default createStore({
         behavior: 'global',
     }],
     dotData: [],
+    qtyChanging: {status:false, setId:0},
+    updateQtyChanging: action ((state, payload) => { 
+      state.qtyChanging = {status: payload.status, setId: payload.setId};
+      }),
     editorState: {activeLayer: 0},
     editorMode: false,
     updatedAt: Date.now(),

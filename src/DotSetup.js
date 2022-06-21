@@ -43,6 +43,30 @@ export function makeDotData(dotQty = 10, setIndex = 0, nextIdx = 0) {
 
 } // end makeDotData
 
+export function removeDotData(dotQty = -1, setIndex = 0, dots) {
+    let toRemove = dotQty;
+    let dotData = [...dots];
+
+    let remove = (array, key, value) => {
+        const index = array.findIndex(obj => obj[key] === value);
+        return index >= 0 ? [
+            ...array.slice(0, index),
+            ...array.slice(index + 1)
+        ] : array;
+    }
+
+    let removeRecursive = () => {
+        dotData = remove(dotData,'dotSetIndex',setIndex);
+        toRemove++;
+        if (toRemove !== 0) {
+            removeRecursive();
+        }
+        return dotData;
+    }
+    dotData = removeRecursive();
+    return dotData;
+}
+
 export function newDotSet() {
     return (
         {

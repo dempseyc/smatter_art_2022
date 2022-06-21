@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react'
 import './CSSreset.css';
 import './App.scss';
 
-import { makeDotData, findNs } from './DotSetup'
+import { makeDotData, findNs, removeDotData } from './DotSetup'
 import { setTargets, chooseStrategy, trackAnim } from './DotMover'
 
 import { useStoreState, useStoreActions } from 'easy-peasy';
@@ -12,15 +12,15 @@ import Container from './components/Container';
 import Animator from './Animator';
 
 const DataHandler = () => {
-	// const dotsLength = useStoreState(state => state.dotData.length);
 	const dots = useStoreState(state => state.dotData);
+	const dotsBySet = useStoreState(state => state.dotsBySet);
 	const minMove = 1/dots.length;
 	const currMoveAmtSq = useRef();
-	// const animOn = useRef();
 	const animOn = useStoreState(state => state.animOn);
 	const startAnim = useStoreActions(actions => actions.startAnim);
 	const stopAnim = useStoreActions(actions => actions.stopAnim);
     const updateDots = useStoreActions(actions => actions.updateDotData);
+
 	console.log('dh renders', animOn);
 
 	const computeCurrMoveAmtSq = (val) => {
@@ -49,11 +49,46 @@ const DataHandler = () => {
 		if (updatePrev.current === undefined || updatePrev.current !== updatedAt) {
 			updatePrev.current = updatedAt;
 		}
-	},[])
-
-	useEffect(() => {
 		if (!animOn ) { startAnim(); }
 	},[])
+
+	const nextIdx = useStoreState(state => state.nextIdx);
+	const updateNextIdx = useStoreActions(actions => actions.updateNextIdx);
+	const qtyChanging = useStoreState(state => state.qtyChanging);
+	const updateQtyChanging = useStoreActions(actions => actions.updateQtyChanging);
+	const sets = useStoreState(state => state.dotSets);
+	
+	const addOrRemoveDots = (qty,setId) => {
+		let dots = [...dots];
+		if (qty > 0) {
+			let newDots = makeDotData(qty,setId,nextIdx);
+			dots = dots.concat(newDots);
+			dots = dots.map(dot => findNs(dot,dots));
+			dots = dots.map(dot => setTargets(dot,dots));
+			dots = dots.map(dot => chooseStrategy(dot));
+			updateDots(dots);
+			updateNextIdx(nextIdx+qty);
+			updateQtyChanging({status:false, setId: setId});
+		} else if (qty < 0) {
+			dots = removeDotData(qty,setId,dots);
+			dots = dots.map(dot => findNs(dot,dots));
+			dots = dots.map(dot => setTargets(dot,dots));
+			dots = dots.map(dot => chooseStrategy(dot));
+			updateDots(dots);
+			updateQtyChanging({status:false, setId: setId});
+		}
+		return;
+	}
+	
+	if (qtyChanging.status) {
+		let diff = 0;
+		stopAnim();
+		if (dotsBySet[qtyChanging.setId].length !== sets[qtyChanging.setId].qty) {
+			diff = sets[qtyChanging.setId].qty - dotsBySet[qtyChanging.setId].length;
+			addOrRemoveDots(diff,qtyChanging.setId);
+			startAnim();
+		}
+	}
 
 	return (
 		animOn ? 
@@ -71,6 +106,7 @@ const DotMaker2 = () => {
 	const init = useStoreState(state => state.init);
 	const nextIdx = useStoreState(state => state.nextIdx);
 	const updateNextIdx = useStoreActions(actions => actions.updateNextIdx);
+
 	console.log('dm2rendrs');
 
 	const firstMake = () => {
