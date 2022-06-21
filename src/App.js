@@ -12,22 +12,20 @@ import Container from './components/Container';
 import Animator from './Animator';
 
 const DataHandler = () => {
-	let dots = useStoreState(state => state.dotData);
-	const minMove = 1/dots.length
-
+	// const dotsLength = useStoreState(state => state.dotData.length);
+	const dots = useStoreState(state => state.dotData);
+	const minMove = 1/dots.length;
 	const currMoveAmtSq = useRef();
-	const animOn = useRef()
+	// const animOn = useRef();
+	const animOn = useStoreState(state => state.animOn);
+	const startAnim = useStoreActions(actions => actions.startAnim);
+	const stopAnim = useStoreActions(actions => actions.stopAnim);
     const updateDots = useStoreActions(actions => actions.updateDotData);
-
-	const stopAnim = () => {
-		animOn.current = false;
-		console.log('stopped');
-	}
+	console.log('dh renders', animOn);
 
 	const computeCurrMoveAmtSq = (val) => {
         if (currMoveAmtSq.current != undefined) {
             if (currMoveAmtSq.current <= minMove) {
-                // currMoveAmtSq.current = 0;
 				stopAnim();
             } else {
                 currMoveAmtSq.current = (currMoveAmtSq.current + val) * 0.5 ;
@@ -44,9 +42,6 @@ const DataHandler = () => {
 		updateDots(data.dots);
 	}
 
-	const startAnim = () => {
-		animOn.current = true;
-	}
 	const updatedAt = useStoreState(state => state.updatedAt);
 	const updatePrev = useRef();
 	
@@ -54,14 +49,14 @@ const DataHandler = () => {
 		if (updatePrev.current === undefined || updatePrev.current !== updatedAt) {
 			updatePrev.current = updatedAt;
 		}
-	},[animOn])
+	},[])
 
 	useEffect(() => {
-		if (!animOn.current ) { startAnim(); }
+		if (!animOn ) { startAnim(); }
 	},[])
 
 	return (
-		animOn.current ? 
+		animOn ? 
 		<Animator 
 		  effect={animate}
 		/> 
@@ -69,30 +64,53 @@ const DataHandler = () => {
 	)
 }
 
-const DotMaker = () => {
-	const init = useStoreActions(actions => actions.initDotData);
+const DotMaker2 = () => {
+	const sets = useStoreState(state => state.dotSets);
+	const initialize = useStoreActions(actions => actions.initDotData);
 	const reset = useStoreActions(actions => actions.reset);
+	const init = useStoreState(state => state.init);
+	const nextIdx = useStoreState(state => state.nextIdx);
+	const updateNextIdx = useStoreActions(actions => actions.updateNextIdx);
+	console.log('dm2rendrs');
+
+	const firstMake = () => {
+		let lastIdx = nextIdx;
+		let dots = [];
+		sets.forEach((s,i) => {
+			let set = makeDotData(s.qty,i,lastIdx);
+			set = set.map(dot => findNs(dot,set));
+			set = set.map(dot => setTargets(dot,set));
+			set = set.map(dot => chooseStrategy(dot));
+			dots = dots.concat(set);
+			if (lastIdx !== 0) {
+				lastIdx = lastIdx + dots.length;
+			} else {
+				lastIdx = dots.length - 1;
+			}
+		});
+		initialize(dots);
+		updateNextIdx(lastIdx);
+	}
 
 	useEffect(() => {
-		let dots = makeDotData(200,0,0);
-			dots = dots.map(dot => findNs(dot,dots));
-			dots = dots.map(dot => setTargets(dot,dots));
-			dots = dots.map(dot => chooseStrategy(dot));
-			init(dots);
+		firstMake();
 		return reset;
-		
 	}, [])
-	return (<DataHandler />)
+			
+
+	return (
+		init ? <DataHandler /> : null
+		)
 }
 
 export default function App () {
-	
+
 	return (
 		<div className="App">
 			<header className="App-header">
 				<h1 className="App-title">SMATTER_art</h1>
 			</header>
-			<DotMaker />
+			<DotMaker2 />
 			<Container />
 		</div>
 	);

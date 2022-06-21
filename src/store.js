@@ -14,7 +14,9 @@ const bySet = function (dots) {
 
 export default createStore({
     init: false,
-    frame: 0,
+    animOn: false,
+    startAnim: action ((state) => { state.animOn = true }),
+    stopAnim: action ((state) => { state.animOn = false }),
     dotSets: [{
         qty: 10,
         size: 3,
@@ -22,30 +24,29 @@ export default createStore({
         behavior: 'global',
     }],
     dotData: [],
-    editorState: {},
+    editorState: {activeLayer: 0},
     editorMode: false,
     updatedAt: Date.now(),
-
-    stepFrame: action ((state, payload) => { state.frame = payload }),
     
     updateDotSets: action ((state, payload) => { state.dotSets = payload }),
     updateDotSet: action ((state, payload) => { state.dotSets[payload.index] = payload.dotSet }),
+    updateQty: action ((state,payload) => { state.dotSets[payload.index].qty = payload.val }),
+    nextIdx: 0,
+    updateNextIdx: action ((state,payload) => { state.nextIdx = payload }),
 
-    initDotData: action ((state, payload) => { 
+    initDotData: action ((state, payload) => {
       state.init = true;
       state.updatedAt = Date.now();
-      state.dotData = payload; //not works
+      state.dotData = payload;
       console.log(payload);
-      // state.dotData = payload.map(i => i);  //not works
-      // state.dotData = JSON.parse(JSON.stringify(payload)); //not works
-      // console.log(JSON.parse(JSON.stringify(payload)));
     }),
 
     reset: action ((state, payload) => {
       state.init = false;
+      state.animOn = false;
       state.updatedAt = Date.now();
       state.dotData = [];
-      console.log(payload);
+      console.log('reset');
     }),
     
     updateDotData: action ((state, payload) => { 
@@ -54,10 +55,11 @@ export default createStore({
       }),
     updateDot: action ((state, payload) => { state.dotData[payload.index] = payload.dot}),
     
+    updateActiveLayer: action ((state,payload) => {state.editorState.activeLayer = payload}),
     updateEditorState: action ((state,payload) => {state.editorState[payload.param] = payload.value}),
     updateEditorMode: action ((state,payload) => {state.editorMode = payload}),
 
-    dotsBySet: computed((state) => bySet(state.dotData))
+    dotsBySet: computed((state) => bySet(state.dotData)),
 
   })
 

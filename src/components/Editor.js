@@ -1,96 +1,57 @@
-import React, { Component } from 'react'
-import BackgroundChooser from './BackgroundChooser'
+// import { useState } from 'react'
+import { useStoreState, useStoreActions } from 'easy-peasy'
 import LayerButton from './LayerButton'
 import LayerPanel from './LayerPanel'
 import './Editor.css'
 
-export default class Editor extends Component {
+const Editor = (props) => {
+    const {numLayers, editorMode } = props;
+    const activeLayer = useStoreState(state => state.editorState.activeLayer);
+    const setActiveLayer = useStoreActions(actions => actions.setActiveLayer);
+    const editMode = editorMode ? 'show' : 'hide';
 
-    constructor(props) {
-        super(props);
+    const layerNums = [...Array(numLayers).keys()];
 
-        this.layerNums = [];
+    const makeButtons = () => {
 
-        for (let i=1;i<=this.props.data.numLayers;i++) {
-            this.layerNums.push(i);
-        }
-
-        this.state= {
-            activeLayer: 1
-        }
-
-        this.makeButtons = this.makeButtons.bind(this);
-        this.makeLayerPanels = this.makeLayerPanels.bind(this);
-        this.updateActiveLayer = this.updateActiveLayer.bind(this);
-
-    }
-    
-    componentDidMount() {
-        this.updateActiveLayer(this.state.activeLayer);
-    }
-
-    makeButtons() {
-
-        return this.layerNums.map((num) => {
-            return(
+        return layerNums.map((num) => {
+            return (
                 <LayerButton 
-                    key={num-1} 
+                    key={num} 
                     layerNum= {num} 
                     handleClick= { () => {
-                        this.updateActiveLayer(num);
+                        setActiveLayer(num);
                      } }
-                    activeLayer= {this.state.activeLayer}
-                    reportActiveLayer= {this.reportActiveLayer.bind(this)}
+                    activeLayer= {activeLayer}
                 >
                 </LayerButton>
             )
         })
     }
 
-    makeLayerPanels() {
-        return this.layerNums.map((num) => {
+    const makeLayerPanels = () => {
+        return layerNums.map((num) => {
             return(
                <LayerPanel 
-                    key= {num-1} 
+                    key= {num} 
                     layerNum= {num} 
-                    data= {this.props.data}
-                    activeLayer= {this.state.activeLayer}
-                    reportActiveLayer= {this.reportActiveLayer.bind(this)}
+                    activeLayer= {activeLayer}
                 >
                 </LayerPanel> 
             )
         })
     }
 
-    updateActiveLayer(numLayer) {
-        this.setState({
-            activeLayer: numLayer
-        }, ()=>{
-            console.log(`layer ${this.state.activeLayer}`);
-        })
-    }
-
-    reportActiveLayer(numLayer) {
-        if (numLayer===this.state.activeLayer) {
-            return "am";
-        } else {
-            return "am-not";
-        }
-    }
-
-    render() {
-        return (
-        <div className="Editor">
-            <BackgroundChooser />
-
-            <div className="LayerButtons">
-                { this.makeButtons() }      
-            </div>
-            <div className="layerPanels">
-                { this.makeLayerPanels() }
-            </div>
-
+    return (
+    <div className={`Editor ${editMode}`}>
+        <div className="LayerButtons">
+            { makeButtons() }      
         </div>
-        )
-    }
+        <div className="layerPanels">
+            { makeLayerPanels() }
+        </div>
+    </div>
+    )
 }
+
+export default Editor

@@ -2,7 +2,6 @@
 import { useStoreState } from 'easy-peasy';
 import DisplayLayer from './DisplayLayer'
 
-
 export default function Display (props) {
 	const numSets = useStoreState(state => state.dotSets.length);
 

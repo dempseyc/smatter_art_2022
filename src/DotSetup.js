@@ -1,4 +1,4 @@
-export function makeDotData(dotQty = 15, setIndex = 0, nextIdx) {
+export function makeDotData(dotQty = 10, setIndex = 0, nextIdx = 0) {
 
     let ranPos = (min, max) => Math.floor(Math.random() * max) + min ;
 
