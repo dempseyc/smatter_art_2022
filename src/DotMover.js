@@ -13,12 +13,15 @@ function squareNum (num) {
 /// only needs its one function
 
 export function setTargets (dot, dots) {
+    const nn1Index = dots.findIndex(d => d['id'] === dot.nn1); 
+    const nn2Index = dots.findIndex(d => d['id'] === dot.nn2); 
+    const nn3Index = dots.findIndex(d => d['id'] === dot.nn3); 
 
     // p1 between nn1 and dot.nn2
     let findMidpoint  = function () {
         // console.log(dot);
-        dot.tmx = (dots[dot.nn2].xPos + dots[dot.nn1].xPos) * 0.5 ;
-        dot.tmy = (dots[dot.nn2].yPos + dots[dot.nn1].yPos) * 0.5 ;
+        dot.tmx = (dots[nn2Index].xPos + dots[nn1Index].xPos) * 0.5 ;
+        dot.tmy = (dots[nn2Index].yPos + dots[nn1Index].yPos) * 0.5 ;
         return { x: dot.tmx, y: dot.tmy};
     }
 
@@ -28,8 +31,8 @@ export function setTargets (dot, dots) {
         let p2 = {}
 
         function findTarget () {
-            p2.x = (dots[dot.nn1].xPos + dots[dot.nn2].xPos + dots[dot.nn3].xPos) * 0.333;
-            p2.y = (dots[dot.nn1].yPos + dots[dot.nn2].yPos + dots[dot.nn3].yPos) * 0.333;
+            p2.x = (dots[nn1Index].xPos + dots[nn2Index].xPos + dots[nn3Index].xPos) * 0.333;
+            p2.y = (dots[nn1Index].yPos + dots[nn2Index].yPos + dots[nn3Index].yPos) * 0.333;
         }
 
         findTarget();
@@ -67,16 +70,16 @@ export function setTargets (dot, dots) {
 
         function findTarget () {
             // nn1 to dot.nn2
-            v1.x = dots[dot.nn2].xPos - dots[dot.nn1].xPos;
-            v1.y = dots[dot.nn2].yPos - dots[dot.nn1].yPos;
+            v1.x = dots[nn2Index].xPos - dots[nn1Index].xPos;
+            v1.y = dots[nn2Index].yPos - dots[nn1Index].yPos;
             v1.mag = Math.sqrt(squareNum(v1.x)+squareNum(v1.y));
             v1n.x = v1.x / v1.mag;
             v1n.y = v1.y / v1.mag;
             // nn1 to dot
             // here we can determine which quadrant is nn1 in compared to dot
             // the process for getting p3 will be determined by the quadrant
-            v2.x = dot.xPos - dots[dot.nn1].xPos;
-            v2.y = dot.yPos - dots[dot.nn1].yPos;
+            v2.x = dot.xPos - dots[nn1Index].xPos;
+            v2.y = dot.yPos - dots[nn1Index].yPos;
             v2.mag = Math.sqrt(squareNum(v2.x)+squareNum(v2.y));
             v2n.x = v2.x / v2.mag;
             v2n.y = v2.y / v2.mag;
@@ -95,8 +98,8 @@ export function setTargets (dot, dots) {
             v1a.mag = adjacent;
             v1a.x = v1n.x * v1a.mag;
             v1a.y = v1n.y * v1a.mag;
-            p3.x = dots[dot.nn1].xPos + v1a.x;
-            p3.y = dots[dot.nn1].yPos + v1a.y;
+            p3.x = dots[nn1Index].xPos + v1a.x;
+            p3.y = dots[nn1Index].yPos + v1a.y;
 
             // vector from closest point on v1 (p3)
             v3.x = dot.xPos - p3.x;
@@ -152,10 +155,6 @@ export function chooseStrategy (dot) {
 export function moveTowardTarget (dot) {
     dot.xPos = dot.xPos + (dot.tx - dot.xPos) * 0.2;
     dot.yPos = dot.yPos + (dot.ty - dot.yPos) * 0.2;
-    // need to capture some random moveAmounts, like every X times it's called
-    // have a watcher / incrementer
-    // when avg moveAmount falls below threshhold, stop calling it
-    // maybe all this in an animation module
     return dot;
 }
 

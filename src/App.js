@@ -12,9 +12,9 @@ import Container from './components/Container';
 import Animator from './Animator';
 
 const DataHandler = () => {
-	const dots = useStoreState(state => state.dotData);
+	const dotData = useStoreState(state => state.dotData);
 	const dotsBySet = useStoreState(state => state.dotsBySet);
-	const minMove = 1/dots.length;
+	const minMove = 0.1/dotData.length;
 	const currMoveAmtSq = useRef();
 	const animOn = useStoreState(state => state.animOn);
 	const startAnim = useStoreActions(actions => actions.startAnim);
@@ -37,7 +37,7 @@ const DataHandler = () => {
     }
 
 	const animate = () => {
-		let data = trackAnim(dots);
+		let data = trackAnim(dotData);
         computeCurrMoveAmtSq(data.distSq);
 		updateDots(data.dots);
 	}
@@ -56,39 +56,45 @@ const DataHandler = () => {
 	const updateNextIdx = useStoreActions(actions => actions.updateNextIdx);
 	const qtyChanging = useStoreState(state => state.qtyChanging);
 	const updateQtyChanging = useStoreActions(actions => actions.updateQtyChanging);
+	const qtyChanged = useRef(false);
+	if (qtyChanged.current !== qtyChanging.status) { qtyChanged.current = qtyChanging.status; }
 	const sets = useStoreState(state => state.dotSets);
 	
-	const addOrRemoveDots = (qty,setId) => {
-		let dots = [...dots];
+	const addOrRemoveDots = (qty,setId,prevQty) => {
+		let dots = [...dotData];
 		if (qty > 0) {
-			let newDots = makeDotData(qty,setId,nextIdx);
+			let newDots = makeDotData(qty,setId,nextIdx,prevQty);
 			dots = dots.concat(newDots);
 			dots = dots.map(dot => findNs(dot,dots));
 			dots = dots.map(dot => setTargets(dot,dots));
 			dots = dots.map(dot => chooseStrategy(dot));
 			updateDots(dots);
 			updateNextIdx(nextIdx+qty);
-			updateQtyChanging({status:false, setId: setId});
 		} else if (qty < 0) {
 			dots = removeDotData(qty,setId,dots);
 			dots = dots.map(dot => findNs(dot,dots));
 			dots = dots.map(dot => setTargets(dot,dots));
 			dots = dots.map(dot => chooseStrategy(dot));
 			updateDots(dots);
-			updateQtyChanging({status:false, setId: setId});
 		}
 		return;
 	}
-	
-	if (qtyChanging.status) {
-		let diff = 0;
-		stopAnim();
-		if (dotsBySet[qtyChanging.setId].length !== sets[qtyChanging.setId].qty) {
-			diff = sets[qtyChanging.setId].qty - dotsBySet[qtyChanging.setId].length;
-			addOrRemoveDots(diff,qtyChanging.setId);
-			startAnim();
+
+	useEffect(() => {
+		console.log('ue in dh');
+		if (qtyChanging.status) {
+			qtyChanged.current = true;
+			let prevQty = dotsBySet[qtyChanging.setId].length;
+			let diff = 0;
+			if (prevQty !== sets[qtyChanging.setId].qty) {
+				diff = sets[qtyChanging.setId].qty - prevQty;
+				addOrRemoveDots(diff,qtyChanging.setId,prevQty);
+				currMoveAmtSq.current = 1024;
+				startAnim();
+			} 
+			updateQtyChanging({status:false, setId: qtyChanging.setId});
 		}
-	}
+	}, [qtyChanged.current])
 
 	return (
 		animOn ? 
@@ -99,55 +105,50 @@ const DataHandler = () => {
 	)
 }
 
-const DotMaker2 = () => {
+const DotMaker2 = ({cb}) => {
 	const sets = useStoreState(state => state.dotSets);
 	const initialize = useStoreActions(actions => actions.initDotData);
 	const reset = useStoreActions(actions => actions.reset);
-	const init = useStoreState(state => state.init);
-	const nextIdx = useStoreState(state => state.nextIdx);
+	// const init = useStoreState(state => state.init);
+	const updateInit = useStoreActions(actions => actions.updateInit);
 	const updateNextIdx = useStoreActions(actions => actions.updateNextIdx);
-
+	
 	console.log('dm2rendrs');
-
+	
 	const firstMake = () => {
-		let lastIdx = nextIdx;
+		let nextIdx = 0;
 		let dots = [];
 		sets.forEach((s,i) => {
-			let set = makeDotData(s.qty,i,lastIdx);
+			let set = makeDotData(s.qty,i,nextIdx);
 			set = set.map(dot => findNs(dot,set));
 			set = set.map(dot => setTargets(dot,set));
 			set = set.map(dot => chooseStrategy(dot));
 			dots = dots.concat(set);
-			if (lastIdx !== 0) {
-				lastIdx = lastIdx + dots.length;
-			} else {
-				lastIdx = dots.length - 1;
-			}
+			nextIdx = nextIdx + dots.length;
 		});
 		initialize(dots);
-		updateNextIdx(lastIdx);
+		updateNextIdx(nextIdx);
 	}
 
 	useEffect(() => {
 		firstMake();
-		return reset;
+		cb();
+		// return reset;
 	}, [])
-			
-
-	return (
-		init ? <DataHandler /> : null
-		)
 }
 
 export default function App () {
+	const [init,setInit] = useState(false);
+	const cb = () => setInit(true);
+	console.log('app renders');
 
 	return (
 		<div className="App">
 			<header className="App-header">
 				<h1 className="App-title">SMATTER_art</h1>
 			</header>
-			<DotMaker2 />
-			<Container />
+			{(!init) ? <DotMaker2 cb={cb}/> : <DataHandler />}
+			<Container init={init}/>
 		</div>
 	);
 }

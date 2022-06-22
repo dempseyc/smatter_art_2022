@@ -6,10 +6,12 @@ import {useStoreState} from 'easy-peasy'
 import './Dot.css';
 
 const Dot = (props) => {
-	const { dot, color, size } = props;
+	const { dot, color, size, index } = props;
 
-	const xPos = useStoreState(state => state.dotData[dot.idx].xPos);
-	const yPos = useStoreState(state => state.dotData[dot.idx].yPos);
+	const xPos = useStoreState(state => state.dotData[index].xPos);
+	const yPos = useStoreState(state => state.dotData[index].yPos);
+	// const xPos = dot.xPos;
+	// const yPos = dot.yPos;
 
 	let pxSize = size * 10;
 
@@ -20,7 +22,7 @@ const Dot = (props) => {
 
 	return (
 		<div
-		className={`${dot.idx} ${dot.nn1}${dot.nn2}${dot.nn3} ${dot.strategy} dot-position`}
+		className={`${index} ${dot.nn1}${dot.nn2}${dot.nn3} ${dot.strategy} dot-position`}
 		style={{
 		left: `${xPos}%`,
 		top: `${yPos}%`

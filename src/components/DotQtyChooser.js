@@ -1,26 +1,52 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useStoreState, useStoreActions} from 'easy-peasy'
 import './LayerPanel.css'
 
+function useIsSettled(value, delay = 1500) {
+	const [isSettled, setIsSettled] = useState(true);
+	const isFirstRun = useRef(true);
+	const prevValueRef = useRef(value);
+  
+	useEffect(() => {
+	  if (isFirstRun.current) {
+		isFirstRun.current = false;
+		return;
+	  }
+	  setIsSettled(false);
+	  prevValueRef.current = value;
+	  const timerId = setTimeout(() => {
+		setIsSettled(true);
+	  }, delay);
+	  return () => { clearTimeout(timerId); }
+	}, [delay, value]);
+	if (isFirstRun.current) {
+	  return true;
+	}
+	return isSettled && prevValueRef.current === value;
+  }
+
 const DotQtyChooser = (props) => {
 	const {layerNum} = props;
-	// react says choose between controlled and uncontrolled
 	const qty = useStoreState(state => state.dotSets[layerNum].qty);
-	const [val, setVal] = useState(qty);
 	const setQty = useStoreActions(actions => actions.updateQty);
-	// useEffect(() => setVal(qty),[]);
+	const stopAnim = useStoreActions(actions => actions.stopAnim);
+	const [val, setVal] = useState(qty);
+	const isValueSettled = useIsSettled(val,1500);
 
+	const updateQtyChanging = useStoreActions(actions => actions.updateQtyChanging);
+
+	
+	useEffect(() => {
+		if (isValueSettled && (qty !== val)) {
+			stopAnim();
+			updateQtyChanging({status: true, setId: layerNum});
+			setQty({index: layerNum, val: val});
+		}
+	},[val, isValueSettled])
+	
 	const handleChange = (e) => {
 		setVal(e.target.value);
-		// debounce , make blinking, then execute;
-		setTimeout(() => {
-			setQty({index: layerNum, val: val});
-		},500)
 	}
-
-	// const debouncedHandleChange = () => {
-	// 	// like this
-	// }
 
 	return (
 		<form className="DotQtyChooser">

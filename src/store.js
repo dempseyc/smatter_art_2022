@@ -37,9 +37,9 @@ export default createStore({
     updateQty: action ((state,payload) => { state.dotSets[payload.index].qty = payload.val }),
     nextIdx: 0,
     updateNextIdx: action ((state,payload) => { state.nextIdx = payload }),
+    updateInit: action ((state,payload) => { state.init = true }),
 
     initDotData: action ((state, payload) => {
-      state.init = true;
       state.updatedAt = Date.now();
       state.dotData = payload;
       console.log(payload);

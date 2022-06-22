@@ -13,6 +13,7 @@ export default function DisplayLayer (props) {
 					size={1}
 					color='black'
 					dot={d}
+					index={i}
 				/>
 				)
 			})
