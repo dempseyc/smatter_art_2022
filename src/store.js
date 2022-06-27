@@ -6,10 +6,15 @@ import { createStore, action, computed } from 'easy-peasy'
 // question is, will 'compute' update the dot data per dot update, if notDeepEqual, bear Reference
 // instead of copy of dot.
 const bySet = function (dots) {
-    let sets = {0:[]};
+    let sets = {0:[],1:[],2:[],3:[],4:[]};
     // wanting to look like { 0: [<array of dots>], 2: [<another array of dots>] }
-    dots.forEach( dot => sets[`${dot.dotSetIndex}`] = [...sets[`${dot.dotSetIndex}`], dot] );
+    dots.forEach( (dot, index) => {
+      // dot.index = index;
+      sets[`${dot.dotSetIndex}`] = [...sets[`${dot.dotSetIndex}`], {index: index, id: dot.id}];
+    });
+    console.log('bySet',sets);
     return sets;
+
 }
 
 export default createStore({
@@ -18,18 +23,25 @@ export default createStore({
     startAnim: action ((state) => { state.animOn = true }),
     stopAnim: action ((state) => { state.animOn = false }),
     dotSets: [{
-        qty: 10,
-        size: 3,
+        qty: 4,
+        size: 21,
         color: 'black',
         behavior: 'global',
-    }],
+    },
+    {
+        qty: 8,
+        size: 34,
+        color: 'red',
+        behavior: 'global',
+    },
+    ],
     dotData: [],
     qtyChanging: {status:false, setId:0},
     updateQtyChanging: action ((state, payload) => { 
       state.qtyChanging = {status: payload.status, setId: payload.setId};
       }),
     editorState: {activeLayer: 0},
-    editorMode: false,
+    editMode: false,
     updatedAt: Date.now(),
     
     updateDotSets: action ((state, payload) => { state.dotSets = payload }),
@@ -61,7 +73,7 @@ export default createStore({
     
     updateActiveLayer: action ((state,payload) => {state.editorState.activeLayer = payload}),
     updateEditorState: action ((state,payload) => {state.editorState[payload.param] = payload.value}),
-    updateEditorMode: action ((state,payload) => {state.editorMode = payload}),
+    updateEditMode: action ((state,payload) => {state.editMode = payload}),
 
     dotsBySet: computed((state) => bySet(state.dotData)),
 

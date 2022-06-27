@@ -9,7 +9,7 @@ import EditorToggle from './EditorToggle'
 export default function Container ({init}) {
     const qtyChanging = useStoreState(state => state.qtyChanging.status);
     const numSets = useStoreState(state => state.dotSets.length);
-    const editorMode = useStoreState( state => state.editorMode);
+
     console.log('display', init);
     return ( (init && !qtyChanging) ?
       (<div className="Container">
@@ -18,10 +18,8 @@ export default function Container ({init}) {
         />
         <Editor
             numLayers={numSets}
-            editorMode={editorMode}
         />
         <EditorToggle
-            editorMode={editorMode}
         />
       </div>)
       

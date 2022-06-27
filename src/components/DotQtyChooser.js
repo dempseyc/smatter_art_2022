@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useStoreState, useStoreActions} from 'easy-peasy'
-import './LayerPanel.css'
+import './Editor.scss'
 
 function useIsSettled(value, delay = 1500) {
 	const [isSettled, setIsSettled] = useState(true);

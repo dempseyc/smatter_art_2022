@@ -3,7 +3,7 @@
 
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import './MiniSlider.scss';
+import './Editor.scss';
 
 export default class ColorPicker extends Component {
   constructor(props) {

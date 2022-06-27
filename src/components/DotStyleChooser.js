@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './LayerPanel.css';
+import './Editor.scss';
 
 export default class DotStyleChooser extends Component {
 

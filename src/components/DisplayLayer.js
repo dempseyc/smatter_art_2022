@@ -1,8 +1,12 @@
 import { useStoreState } from 'easy-peasy';
-import Dot from './Dot'
+import Dot from './Dot2'
 
-export default function DisplayLayer (props) {
-	const dotData = useStoreState( state => state.dotData );
+export default function DisplayLayer ({layerNum}) {
+	const dotsBySet = useStoreState( state => state.dotsBySet[layerNum] );
+	const setData = useStoreState( state => state.dotSets[layerNum] );
+	const dlSize = '100px';
+	
+	let viewBox = `0 0 100 100`;
 
 	let makeDots = function (dots) {
 		console.log('dl makedots');
@@ -10,10 +14,11 @@ export default function DisplayLayer (props) {
 			return (
 				<Dot
 					key={`d-${i}`}
-					size={1}
-					color='black'
-					dot={d}
-					index={i}
+					size={setData.size}
+					color={setData.color}
+					dot={d} //not needed in prod
+					id={d.id}
+					index={d.index}
 				/>
 				)
 			})
@@ -21,7 +26,16 @@ export default function DisplayLayer (props) {
 		
 	return (
 		<div className="DisplayLayer">
-		{makeDots(dotData)}
+			<svg
+			x={0} 
+			y={0}
+			// width={dlSize}
+			// height={dlSize} 
+			viewBox={viewBox}
+			xmlns="http://www.w3.org/2000/svg"
+			>
+				{makeDots(dotsBySet)}
+			</svg>
 		</div>
 	)
 }

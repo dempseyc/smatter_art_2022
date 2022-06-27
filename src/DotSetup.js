@@ -24,7 +24,7 @@ export function makeDotData(dotQty = 10, setIndex = 0, nextIdx = 0, prevQty = 0)
 
     for(let i = 0; i<dotQty-1; i++) {
         let yPos = ranPos(0,400)/4;
-        let xPos = ranPos(0,400)/8;
+        let xPos = ranPos(0,400)/8; //placing 1st twin on left
         let xPosT = 100 - xPos;
         if ( twinEatsTwin(xPos,xPosT) ) {
             xPos = 50;
@@ -138,7 +138,6 @@ export function findNs (currDot, dotsToConsider) {
             // and nn2has not been set, set both
         }
     });
-
     // the nn1 should have been set to second twin with '<=', so make nn 2 first twin
     if (!currDot.xTwin) {
         currDot.nn2 = currDot.nn1-1;
@@ -146,14 +145,15 @@ export function findNs (currDot, dotsToConsider) {
         // and exit
         return currDot;
     }
+
     // find nn2
     dTC.forEach((dot) => {
         let iNxDistance = Math.abs(currDot.xPos - dot.xPos);
         let iNyDistance = Math.abs(currDot.yPos - dot.yPos);
         let iNDistanceSqrd = squareNum(iNxDistance) + squareNum(iNyDistance);
-        // if it's not me
-        if (dot.id !== currDot.id) {
-            if (nn2DistanceSqrd > iNDistanceSqrd && iNDistanceSqrd > nn1DistanceSqrd) {
+        // if it's not me and not nn1
+        if (dot.id !== currDot.id && dot.id !== dot.nn1) {
+            if (nn2DistanceSqrd > iNDistanceSqrd && iNDistanceSqrd >= nn1DistanceSqrd) {
             // console.log('passed nn2qualification')
             currDot.nn2 = dot.id;
             nn2DistanceSqrd = iNDistanceSqrd;
@@ -166,11 +166,11 @@ export function findNs (currDot, dotsToConsider) {
         let iNyDistance = Math.abs(currDot.yPos - dot.yPos);
         let iNDistanceSqrd = squareNum(iNxDistance) + squareNum(iNyDistance);
         // if it's not me
-        if (dot.id !== currDot.id) {
-            if (nn3DistanceSqrd > iNDistanceSqrd && iNDistanceSqrd > nn2DistanceSqrd) {
-            // console.log('passed nn2qualification')
-            currDot.nn3 = dot.id;
-            nn3DistanceSqrd = iNDistanceSqrd;
+        if (dot.id !== currDot.id && dot.id !== currDot.nn1 && dot.id !== currDot.nn2) {
+            if (nn3DistanceSqrd > iNDistanceSqrd && iNDistanceSqrd >= nn2DistanceSqrd) {
+                // console.log('passed nn2qualification')
+                currDot.nn3 = dot.id;
+                nn3DistanceSqrd = iNDistanceSqrd;
             }
         }
     });

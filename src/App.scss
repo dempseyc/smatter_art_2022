@@ -3,7 +3,7 @@ body {
   overflow-x: hidden;
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   color: black;
-  font-size: 4vw;
+  font-size: 6vw;
   line-height: 1;
   font-family: 'M PLUS Rounded 1c', sans-serif;
   -ms-overflow-style: none;  /* Internet Explorer 10+ */
@@ -19,12 +19,33 @@ h1 {
   font-size: 2em;
 }
 
+.App {
+  text-align: center;
+}
+
+.App-header {
+  height: 2em;
+}
+
+.Container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  display: grid;
+  grid-template-columns: 25% 25% 25% 25%;
+}
+
 .wrapper-1 {
     display: grid;
     width: 100vw;
     height: 100vh;
-    grid-template-rows: 3em 2em 18em 5em 1fr;
-    grid-template-columns: 1fr 18em 0em 1fr;
+    grid-template-rows: 2.5em 1fr;
+    padding-bottom: calc(1em + env(safe-area-inset-bottom));
+}
+
+.DisplayLayer {
+  grid-area: 2 / 1 / 3 / 2 ;
 }
 
 .wrapper-2 {
@@ -33,11 +54,10 @@ h1 {
     left: 0;
     width: 100vw;
     height: 100vh;
-    grid-template-rows: 1em 1fr;
-    grid-template-columns: 0.5em 1fr 0.5em;
-    border: 4px solid yellowgreen;
-    background-color: lightslategray;
+    grid-template-rows: 2.5em 2em 1fr;
+    grid-template-columns: 0.3% 14.2% 14.2% 14.2% 14.2% 14.2% 14.2% 14.2% 0.3%;
     transition: top 1s ease 0s;
+    padding-bottom: calc(1em + env(safe-area-inset-bottom));
 }
 
 @media screen and (min-width:520px) {
@@ -54,8 +74,6 @@ h1 {
         display: grid;
         width: 50vw;
         height: 100vh;
-        grid-template-rows: 3em 2em 15em 5em 1fr;
-        grid-template-columns: 1em 15em 0em 1em;
     }
 
     .wrapper-2 {
@@ -77,50 +95,5 @@ h1 {
     body {
         font-size: 2.5vw;
     }
-    .wrapper-1 {
-        grid-template-rows: 3em 2em 12em 5em 1fr;
-        grid-template-columns: 1fr 12em 0em 1fr;
-    }
-
-    #board {
-        height: 12em;
-        width: 12em;
-    }
 }
 /* end media screen min 820 */
-
-.App {
-  text-align: center;
-}
-
-.Container {
-  width: 100vw;
-  display: grid;
-  grid-auto-columns: 25% 25% 25% 1fr;
-
-  .Editor {
-    position: relative;
-    grid-column: 4/5;
-    /* right: -2%; */
-    height: 100vh;
-    background-color: #AAA;
-    border: 4px solid #777;
-    border-left: 40px solid #777;
-    border-right: 30px solid #777;
-  }
-
-  .Display {
-    position: relative;
-    grid-column: 1/4;
-    /* height: 100vh; */
-    border: 4px solid #777;
-    overflow: hidden;
-  }
-
-}
-
-// .DisplayLayer {
-//   height: 100%;
-//   mix-blend-mode: hard-light;
-  
-// }

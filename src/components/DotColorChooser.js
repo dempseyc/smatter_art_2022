@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import MiniSlider from './MiniSlider.js';
-import './MiniSlider.scss';
+import './Editor.scss';
 
 export default class DotColorChooser extends Component {
     constructor(props) {

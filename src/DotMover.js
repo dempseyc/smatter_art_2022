@@ -6,6 +6,8 @@ function squareNum (num) {
     return Math.pow(num, 2);
 }
 
+const $root3 = 1.732
+
 /// need nearest point orthogonal to get 'rotation' angle
 /// except if dot gets to midpoint, that v3 vector will go to zero
 /// maybe stop resetting it when it gets too close
@@ -15,14 +17,23 @@ function squareNum (num) {
 export function setTargets (dot, dots) {
     const nn1Index = dots.findIndex(d => d['id'] === dot.nn1); 
     const nn2Index = dots.findIndex(d => d['id'] === dot.nn2); 
-    const nn3Index = dots.findIndex(d => d['id'] === dot.nn3); 
+    const nn3Index = dots.findIndex(d => d['id'] === dot.nn3);
+
+    // for padding implementation, need vector, dist to nn1
+    let findV0 = function () {
+        let v0 = {};
+        v0.x = dots[nn1Index].xPos - dot.xPos;
+        v0.y = dots[nn1Index].yPos - dot.yPos;
+        let v0distSq = squareNum(v0.x) + squareNum(v0.y);
+        dot.v0 = v0;
+        dot.v0distSq = v0distSq;
+    }
 
     // p1 between nn1 and dot.nn2
     let findMidpoint  = function () {
         // console.log(dot);
         dot.tmx = (dots[nn2Index].xPos + dots[nn1Index].xPos) * 0.5 ;
         dot.tmy = (dots[nn2Index].yPos + dots[nn1Index].yPos) * 0.5 ;
-        return { x: dot.tmx, y: dot.tmy};
     }
 
     // target center of triangle /////////////////////////////////////////
@@ -64,7 +75,7 @@ export function setTargets (dot, dots) {
         // v2 normalized
         let v2n = {};
 
-        p1 = findMidpoint();
+        p1 = {x: dot.tmx, y: dot.tmy};
         // dot.p1 = p1;
         // console.log(p1);
 
@@ -109,11 +120,11 @@ export function setTargets (dot, dots) {
             dot.v3 = v3;
 
             // shifting v3 to midpoint, thats the nice middle orthoganal
-            // p2.x = p1.x + v3.x;
-            // p2.y = p1.y + v3.y;
+            p2.x = p1.x + v3.x;
+            p2.y = p1.y + v3.y;
             // believe this!
-            p2.x = p1.x - v3.x;
-            p2.y = p1.y - v3.y; //see
+            // p2.x = p1.x - v3.x;
+            // p2.y = p1.y - v3.y; //see
 
         }
 
@@ -124,6 +135,7 @@ export function setTargets (dot, dots) {
     }
 
     /// executing
+    findV0();
     findMidpoint();
     findCenterOfTriangle();
     findNearestPointOrthogonal();
@@ -158,6 +170,13 @@ export function moveTowardTarget (dot) {
     return dot;
 }
 
+export  function applyPadding (dot, minDistSq) {
+    if (dot.v0distSq < minDistSq) {
+        dot.tx = dot.tx + (dot.v3.x * 0.2);
+        dot.ty = dot.ty + (dot.v3.y * 0.2);
+    }
+}
+
 export function trackAnim (dots) {
     let ranDotIndex = ranMM(0,dots.length-1);
     let distSq = 0;
@@ -166,6 +185,7 @@ export function trackAnim (dots) {
             distSq = squareNum(dot.xPos-dot.tx)+squareNum(dot.yPos-dot.ty);
         }
         setTargets(dot,dots);
+        // applyPadding(dot, 34*$root3);
         moveTowardTarget(dot);
     })
     return {dots,distSq};

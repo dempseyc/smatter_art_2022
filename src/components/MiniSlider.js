@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './MiniSlider.scss';
+import './Editor.scss';
 
 export default class MiniSlider extends Component {
 

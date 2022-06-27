@@ -22,7 +22,7 @@ export default function Display (props) {
 	}
 
 	return (
-		<div className="display">
+		<div className="display wrapper-1">
 			{ layers }
 		</div>
 	)

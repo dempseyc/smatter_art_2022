@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import './LayerPanel.css';
-import './MiniSlider.scss';
+import './Editor.scss';
 
 export default class DotSizeChooser extends Component {
 

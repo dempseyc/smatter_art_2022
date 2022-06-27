@@ -2,13 +2,13 @@
 import { useStoreState, useStoreActions } from 'easy-peasy'
 import LayerButton from './LayerButton'
 import LayerPanel from './LayerPanel'
-import './Editor.css'
+import './Editor.scss'
 
 const Editor = (props) => {
     const {numLayers, editorMode } = props;
     const activeLayer = useStoreState(state => state.editorState.activeLayer);
-    const setActiveLayer = useStoreActions(actions => actions.setActiveLayer);
-    const editMode = editorMode ? 'show' : 'hide';
+    const updateActiveLayer = useStoreActions(actions => actions.updateActiveLayer);
+    const editMode = useStoreState( state => state.editMode);
 
     const layerNums = [...Array(numLayers).keys()];
 
@@ -20,7 +20,7 @@ const Editor = (props) => {
                     key={num} 
                     layerNum= {num} 
                     handleClick= { () => {
-                        setActiveLayer(num);
+                        updateActiveLayer(num);
                      } }
                     activeLayer= {activeLayer}
                 >
@@ -43,11 +43,11 @@ const Editor = (props) => {
     }
 
     return (
-    <div className={`Editor ${editMode}`}>
+    <div className={`Editor edit-${editMode} wrapper-2`}>
         <div className="LayerButtons">
             { makeButtons() }      
         </div>
-        <div className="layerPanels">
+        <div className="LayerPanels">
             { makeLayerPanels() }
         </div>
     </div>

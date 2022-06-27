@@ -3,7 +3,7 @@ import BlendModeChooser from './BlendModeChooser'
 import DotSizeChooser from './DotSizeChooser'
 import DotQtyChooser from './DotQtyChooser'
 import DotColorChooser from './DotColorChooser'
-import './LayerPanel.css'
+import './Editor.scss'
 
 const LayerPanel = (props) => {
 	const { activeLayer, layerNum } = props;
