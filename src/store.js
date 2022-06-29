@@ -1,14 +1,18 @@
 import { createStore, action, computed } from 'easy-peasy'
+import { sizes, childShrinks, colors } from './dotStyles'
+import utils from './utils'
 
+const half_minQty = 2;
+const half_maxQty = 20;
 const maxDotSets = 5;
 
 const newDotSet = () => {
   return {
-      qty: 4,
-      size: 21,
-      color: 0,
-      childColor: 11,
-      childShrink: 0.5,
+      qty: utils.ranMMexp(half_minQty,half_maxQty)*2,
+      size: sizes[utils.ranMM(0, sizes.length-1)],
+      color: utils.ranMM(0, colors.length-1),
+      childColor: utils.ranMM(0, colors.length-1),
+      childShrink: childShrinks[utils.ranMM(0, childShrinks.length-1)],
       behavior: 'global',
   };
 }
@@ -30,22 +34,7 @@ export default createStore({
     animOn: false,
     startAnim: action ((state) => { state.animOn = true }),
     stopAnim: action ((state) => { state.animOn = false }),
-    dotSets: [{
-        qty: 4,
-        size: 21,
-        color: 0,
-        childColor: 11,
-        childShrink: 0.5,
-        behavior: 'global',
-    },
-    {
-        qty: 8,
-        size: 34,
-        color: 9,
-        childColor: 0,
-        childShrink: 0.25,
-        behavior: 'global',
-    },
+    dotSets: [newDotSet(),newDotSet(),newDotSet()
     ],
     dotData: [],
     qtyChanging: {status:false, setId:0},

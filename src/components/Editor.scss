@@ -17,9 +17,6 @@ input {
   font-size: 0.8em;
   font-weight: bold;
   line-height: 0.8em;
-  border-width: 2px;
-  border-style: inset;
-  border-color: $dimming-red $dimming-red-light; 
 }
 
 .Editor {
@@ -75,6 +72,10 @@ input {
 
 .LayerPanel {
   background-color: $dimming-red;
+}
+
+label, .EC-label {
+  font-size: 0.7em;
 }
 
 //// mini-slider

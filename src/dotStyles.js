@@ -12,17 +12,6 @@ export const blendModes = [
     "opaque"
 ];
 
-const dotStyles = sizes.map(function (s) {
-    return {
-        size: s,
-        shape: 'circle',
-        child: false,
-        childShrink: 0.5,
-        orient: 'NS',
-        yRatio: 1
-    }
-})
-
 const $cyan_025 = '#00dddd40';
 const $cyan_050 = '#00dddd80';
 const $cyan_075 = '#00ddddc0';
