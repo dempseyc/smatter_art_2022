@@ -5,7 +5,7 @@ const ExpandingChooser = (props) => {
   const {update, values, value, output, label} = props;
 
   const [expanded,setExpanded] = useState(false);
-  const [choice, setChoice] =  useState(0);
+  const [choice, setChoice] =  useState(value);
 
   const changeChoice = (newChoice) => {
     if (newChoice !== value)

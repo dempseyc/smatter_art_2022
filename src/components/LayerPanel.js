@@ -28,15 +28,16 @@ const LayerPanel = (props) => {
 		/>
 		<br></br>
 		<DotColorChooser
-			key= "dcc-1"
-			type= "color"
-			layerNum= {layerNum}
+			key="dcc-1"
+			param="color"
+			layerNum={layerNum}
+
 		/>
-		{/* <DotColorChooser
-			key= "dcc-2"
-			type= "childColor"
-			layerNum= {layerNum}
-		/> */}
+		<DotColorChooser
+			key="dcc-2"
+			param="childColor"
+			layerNum={layerNum}
+		/>
 	</div>
 	)
 }

@@ -1,5 +1,5 @@
 import { useStoreState } from 'easy-peasy';
-import { $pallette_1 } from '../dotStyles';
+import { $pallette_1, $pallette_2, childShrinks } from '../dotStyles';
 import Dot from './Dot2'
 
 export default function DisplayLayer ({layerNum}) {
@@ -24,6 +24,22 @@ export default function DisplayLayer ({layerNum}) {
 				)
 			})
 	}
+
+	let makeDotChildren = function (dots) {
+		console.log('dl makedots');
+		return dots.map(function (d,i) {
+			return (
+				<Dot
+					key={`dc-${i}`}
+					size={setData.size*childShrinks[setData.childShrink]}
+					color={$pallette_2[setData.childColor]}
+					dot={d} //not needed in prod
+					id={d.id}
+					index={d.index}
+				/>
+				)
+			})
+	}
 		
 	return (
 		<div className="DisplayLayer">
@@ -36,6 +52,7 @@ export default function DisplayLayer ({layerNum}) {
 			xmlns="http://www.w3.org/2000/svg"
 			>
 				{makeDots(dotsBySet)}
+				{makeDotChildren(dotsBySet)}
 			</svg>
 		</div>
 	)
