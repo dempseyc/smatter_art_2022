@@ -25,6 +25,7 @@ const LayerPanel = (props) => {
 		/> */}
 		<DotSizeChooser
 			layerNum= {layerNum}
+			param="size"
 		/>
 		<br></br>
 		<DotColorChooser
@@ -32,6 +33,11 @@ const LayerPanel = (props) => {
 			param="color"
 			layerNum={layerNum}
 
+		/>
+		<br></br>
+		<DotSizeChooser
+			layerNum= {layerNum}
+			param="childShrink"
 		/>
 		<DotColorChooser
 			key="dcc-2"

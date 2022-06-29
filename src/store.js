@@ -1,10 +1,18 @@
 import { createStore, action, computed } from 'easy-peasy'
-// import { notDeepEqual } from 'assert'
-// import { Reference } from 'eslint-scope'
-// import { update } from 'immutable'
 
-// question is, will 'compute' update the dot data per dot update, if notDeepEqual, bear Reference
-// instead of copy of dot.
+const maxDotSets = 5;
+
+const newDotSet = () => {
+  return {
+      qty: 4,
+      size: 21,
+      color: 0,
+      childColor: 11,
+      childShrink: 0.5,
+      behavior: 'global',
+  };
+}
+
 const bySet = function (dots) {
     let sets = {0:[],1:[],2:[],3:[],4:[]};
     // wanting to look like { 0: [<array of dots>], 2: [<another array of dots>] }
@@ -27,7 +35,7 @@ export default createStore({
         size: 21,
         color: 0,
         childColor: 11,
-        childShrink: 5,
+        childShrink: 0.5,
         behavior: 'global',
     },
     {
@@ -35,7 +43,7 @@ export default createStore({
         size: 34,
         color: 9,
         childColor: 0,
-        childShrink: 2,
+        childShrink: 0.25,
         behavior: 'global',
     },
     ],
@@ -48,7 +56,12 @@ export default createStore({
     editMode: false,
     updatedAt: Date.now(),
     
-    updateDotSets: action ((state, payload) => { state.dotSets = payload }),
+    addDotSet: action ((state, payload) => { 
+      if (payload < maxDotSets) {
+        state.dotSets = [...state.dotSets, newDotSet()];
+        state.qtyChanging = {status: true, setId: payload};
+      }
+    }),
     updateDotSet: action ((state, payload) => { state.dotSets[payload.index][payload.param] = payload.value }),
     updateQty: action ((state,payload) => { state.dotSets[payload.index].qty = payload.val }),
     nextIdx: 0,

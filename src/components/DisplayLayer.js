@@ -1,11 +1,10 @@
 import { useStoreState } from 'easy-peasy';
-import { $pallette_1, $pallette_2, childShrinks } from '../dotStyles';
+import { $pallette_1, $pallette_2 } from '../dotStyles';
 import Dot from './Dot2'
 
 export default function DisplayLayer ({layerNum}) {
 	const dotsBySet = useStoreState( state => state.dotsBySet[layerNum] );
 	const setData = useStoreState( state => state.dotSets[layerNum] );
-	const dlSize = '100px';
 	
 	let viewBox = `0 0 100 100`;
 
@@ -31,7 +30,7 @@ export default function DisplayLayer ({layerNum}) {
 			return (
 				<Dot
 					key={`dc-${i}`}
-					size={setData.size*childShrinks[setData.childShrink]}
+					size={setData.size*setData.childShrink}
 					color={$pallette_2[setData.childColor]}
 					dot={d} //not needed in prod
 					id={d.id}

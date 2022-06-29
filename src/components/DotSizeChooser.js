@@ -1,16 +1,23 @@
-import {useState} from 'react';
 import {useStoreState, useStoreActions} from 'easy-peasy';
 import MiniSlider from './MiniSlider';
 import './Editor.scss';
-import { sizes } from '../dotStyles';
+import { sizes, childShrinks } from '../dotStyles';
 
-const DotSizeChooser = ({layerNum}) => {
-	const size = useStoreState(state => state.dotSets[layerNum].size);
+const DotSizeChooser = (props) => {
+	const {layerNum, param} = props;
+	const values = (() => {
+		switch(param) {
+			case 'size': { return sizes; break; }
+			case 'childShrink' : { return childShrinks; break; }
+			default: { break; }
+		}
+	})();
+	const size = useStoreState(state => state.dotSets[layerNum][param]);
 	const updateDotSet = useStoreActions(actions => actions.updateDotSet);
-	const val = sizes.indexOf(size);
+	const val = values.indexOf(size);
 
 	const update = (newVal) => {
-		updateDotSet({param: 'size', index: layerNum, value: sizes[newVal]});
+		updateDotSet({param: param, index: layerNum, value: values[newVal]});
 		return newVal;
 	}
 
@@ -18,12 +25,12 @@ const DotSizeChooser = ({layerNum}) => {
 		<div className="DotSizeChooser">
 			<MiniSlider
 				min="0" 
-				max={sizes.length-1} 
+				max={values.length-1} 
 				step="1"
-				values={sizes}
+				values={values}
 				value={val}
-				label="Size"
-				output={sizes[val]}
+				label={param.toUpperCase()}
+				output={values[val]}
 				update={update}
 			/>
 		</div>

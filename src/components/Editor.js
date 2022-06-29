@@ -12,19 +12,31 @@ const Editor = (props) => {
 
     const layerNums = [...Array(numLayers).keys()];
 
-    const makeButtons = () => {
+    const newSet = useStoreActions(actions => actions.addDotSet);
 
+    const addLayerButton = () => {
+        return (<LayerButton
+            key="add-Layer"
+            layerNum={numLayers}
+            handleClick={ () => {
+                newSet(numLayers);
+            }}
+            activeLayer={activeLayer}
+            numLayers={numLayers}
+        />)
+    }
+
+    const makeButtons = () => {
         return layerNums.map((num) => {
             return (
                 <LayerButton 
                     key={num} 
-                    layerNum= {num} 
-                    handleClick= { () => {
+                    layerNum={num} 
+                    handleClick={ () => {
                         updateActiveLayer(num);
                      } }
                     activeLayer= {activeLayer}
-                >
-                </LayerButton>
+                />
             )
         })
     }
@@ -36,8 +48,7 @@ const Editor = (props) => {
                     key= {num} 
                     layerNum= {num} 
                     activeLayer= {activeLayer}
-                >
-                </LayerPanel> 
+                /> 
             )
         })
     }
@@ -45,7 +56,9 @@ const Editor = (props) => {
     return (
     <div className={`Editor edit-${editMode} wrapper-2`}>
         <div className="LayerButtons">
-            { makeButtons() }      
+            { makeButtons() } 
+            { addLayerButton() }
+            {/* { trashLayerButton() }      */}
         </div>
         <div className="LayerPanels">
             { makeLayerPanels() }

@@ -11,12 +11,9 @@ const Dot = (props) => {
 	const xPos = useStoreState(state => state.dotData[index].xPos);
 	const yPos = useStoreState(state => state.dotData[index].yPos);
 
-
-	let pxSize = size;
-
-	let radius = `${pxSize / 2}`;
-	let negRadius = `${0-pxSize / 2}`;
-	let dotSize = `${pxSize}`;
+	let radius = `${size / 2}`;
+	let negRadius = `${0-size / 2}`;
+	let dotSize = `${size}`;
 
 	return (
         <>
