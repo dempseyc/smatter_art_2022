@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+// import React, { Component } from 'react'
 import BlendModeChooser from './BlendModeChooser'
 import DotSizeChooser from './DotSizeChooser'
 import DotQtyChooser from './DotQtyChooser'
@@ -22,26 +22,20 @@ const LayerPanel = (props) => {
 			layerNum= {layerNum}
 			// data={data}
 			// blendModes={data.blendModes}
-		/>
+		/> */}
 		<DotSizeChooser
 			layerNum= {layerNum}
-			// dotSize= {data.layers[layerNum-1].dotSize}
-			// data= {data}
 		/>
 		<br></br>
 		<DotColorChooser
 			key= "dcc-1"
-			type= "inner-color"
+			type= "color"
 			layerNum= {layerNum}
-			// dotColor= {data.layers[layerNum-1].dotColor1}
-			// data= {data}
 		/>
-		<DotColorChooser
+		{/* <DotColorChooser
 			key= "dcc-2"
-			type= "outer-color"
+			type= "childColor"
 			layerNum= {layerNum}
-			// dotColor= {data.layers[layerNum-1].dotColor2}
-			// data= {data}
 		/> */}
 	</div>
 	)

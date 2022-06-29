@@ -1,38 +1,29 @@
-import React, { Component } from 'react';
+import {useState, useEffect} from 'react';
 import './Editor.scss';
 
-export default class MiniSlider extends Component {
+// requires props {update, val, min, max, step, label}
+const MiniSlider = (props) => {
+    const [val, setVal] = useState(props.value);
+    const {update, min, max, step, label, output} = props;
 
-    constructor (props) {
-        super(props);
-        this.channel = this.props.channel;
-        this.state = {
-            value: this.props.val
-        }
-        this.handleChange = this.handleChange.bind(this);
-    }
+    const handleChange = (event) => {
+        setVal( update(event.target.value) )
+    };
 
-    handleChange (event) {
-        this.setState({
-            value: event.target.value
-        }, this.props.update(event) )
-    }
-
-    render() {
-        return (
+    return (
         <div className="channel">
-            <label className="mini-output">{this.props.channel}: {this.props.children}</label>
+            <label className="mini-output">{label}: {output}</label>
             <input
-                className="mini-input"
-                ref="input" 
-                value={this.props.val} 
+                className="mini-input" 
+                value={val}
                 type="range" 
-                min={this.props.min} 
-                max={this.props.max} 
-                step={this.props.step}
-                onChange={this.handleChange}
+                min={min} 
+                max={max} 
+                step={step}
+                onChange={handleChange}
             /> 
         </div>
-        )
-  }
+    )
 }
+
+export default MiniSlider

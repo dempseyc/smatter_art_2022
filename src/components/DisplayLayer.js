@@ -1,4 +1,5 @@
 import { useStoreState } from 'easy-peasy';
+import { $pallette_1 } from '../dotStyles';
 import Dot from './Dot2'
 
 export default function DisplayLayer ({layerNum}) {
@@ -15,7 +16,7 @@ export default function DisplayLayer ({layerNum}) {
 				<Dot
 					key={`d-${i}`}
 					size={setData.size}
-					color={setData.color}
+					color={$pallette_1[setData.color]}
 					dot={d} //not needed in prod
 					id={d.id}
 					index={d.index}

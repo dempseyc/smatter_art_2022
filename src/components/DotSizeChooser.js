@@ -1,57 +1,33 @@
-import React, { Component } from 'react';
+import {useState} from 'react';
+import {useStoreState, useStoreActions} from 'easy-peasy';
+import MiniSlider from './MiniSlider';
 import './Editor.scss';
+import { sizes } from '../dotStyles';
 
-export default class DotSizeChooser extends Component {
+const DotSizeChooser = ({layerNum}) => {
+	const size = useStoreState(state => state.dotSets[layerNum].size);
+	const updateDotSet = useStoreActions(actions => actions.updateDotSet);
+	const val = sizes.indexOf(size);
 
-  constructor(props) {
-    super(props);
-    this.layer = this.props.layerNum;
-    this.state = {
-      value: this.props.dotSize
-    };
+	const update = (newVal) => {
+		updateDotSet({param: 'size', index: layerNum, value: sizes[newVal]});
+		return newVal;
+	}
 
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  handleChange(event) {
-    this.setState({
-      value: event.target.value
-    }, this.props.data.updateDotSize(event.target.value,this.layer));
-  }
-
-  render() {
-    return (
-
-       <div className="DotSizeChooser">
-          <DotSizeSlider 
-            ref={this.layer+"-dot-size"} 
-            min="5" 
-            max="850" 
-            step="5" 
-            val={this.state.value} 
-            update={(e) => this.handleChange(e)} >{this.state.value}
-          </DotSizeSlider>
-      </div>
-    )
-  }
+	return (
+		<div className="DotSizeChooser">
+			<MiniSlider
+				min="0" 
+				max={sizes.length-1} 
+				step="1"
+				values={sizes}
+				value={val}
+				label="Size"
+				output={sizes[val]}
+				update={update}
+			/>
+		</div>
+	)
 }
 
-class DotSizeSlider extends React.Component {
-  render() {
-    return (
-      <div className="channel">
-        <label className="mini-output">Dot Size: {this.props.children}</label>
-          <input
-            className="mini-input"
-            ref={this.layer+"-dot-size-input"}
-            value={this.props.val}
-            type="range" 
-            min={this.props.min} 
-            max={this.props.max} 
-            step={this.props.step} 
-            onChange={this.props.update} 
-          /> 
-     </div>
-    )
-  }
-}
+export default DotSizeChooser

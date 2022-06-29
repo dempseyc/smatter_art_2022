@@ -129,6 +129,11 @@ input {
   .not-active:not(button) {
     display: none;
   }
+
+  .pallette-tile {
+    height: 100%;
+    width: 100%;
+  }
   
   .LayerPanel {
     display: flex;
@@ -144,12 +149,6 @@ input {
     padding-top: 5%;
   }
   
-  .DotColorChooser1 {
-  }
-  
-  .DotColorChooser2 {
-  }
-  
   .DotSizeChooser {
     padding-top: 5%;
   }
@@ -157,23 +156,28 @@ input {
     padding-top: 5%;
   }
   
-  .style-button {
+  .EC-choices {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .EC-button {
     display: block;
-    width: 75px;
-    height: 75px;
-    background-size: cover;
-    background-position: center;
+    width: 2em;
+    height: 2em;
+    // background-size: cover;
+    // background-position: center;
   }
   
-  .style-button.am-chosen {
+  .EC-button.chosen {
     display: block;
   }
   
-  .style-button.am-not-chosen {
+  .EC-button.not-chosen {
     display: none;
   }
   
-  .style-button.expanded {
+  .EC-button.expanded {
     display: inline-block;
   }
 

@@ -45,7 +45,7 @@ export default createStore({
     updatedAt: Date.now(),
     
     updateDotSets: action ((state, payload) => { state.dotSets = payload }),
-    updateDotSet: action ((state, payload) => { state.dotSets[payload.index] = payload.dotSet }),
+    updateDotSet: action ((state, payload) => { state.dotSets[payload.index][payload.param] = payload.value }),
     updateQty: action ((state,payload) => { state.dotSets[payload.index].qty = payload.val }),
     nextIdx: 0,
     updateNextIdx: action ((state,payload) => { state.nextIdx = payload }),
@@ -72,7 +72,7 @@ export default createStore({
     updateDot: action ((state, payload) => { state.dotData[payload.index] = payload.dot}),
     
     updateActiveLayer: action ((state,payload) => {state.editorState.activeLayer = payload}),
-    updateEditorState: action ((state,payload) => {state.editorState[payload.param] = payload.value}),
+    // updateEditorState: action ((state,payload) => {state.editorState[payload.param] = payload.value}),
     updateEditMode: action ((state,payload) => {state.editMode = payload}),
 
     dotsBySet: computed((state) => bySet(state.dotData)),
