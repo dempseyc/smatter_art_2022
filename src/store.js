@@ -62,6 +62,12 @@ export default createStore({
         state.qtyChanging = {status: true, setId: payload};
       }
     }),
+    removeDotSet: action ((state,payload) => {
+      if (state.dotSets[payload]) {
+        state.dotSets = state.dotSets.filter((s,i)=> i !== payload );
+        state.qtyChanging = {status: true, setId: payload};
+      }
+    }),
     updateDotSet: action ((state, payload) => { state.dotSets[payload.index][payload.param] = payload.value }),
     updateQty: action ((state,payload) => { state.dotSets[payload.index].qty = payload.val }),
     nextIdx: 0,
