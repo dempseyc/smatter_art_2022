@@ -50,10 +50,9 @@ const DotQtyChooser = (props) => {
 
 	return (
 		<form className="DotQtyChooser">
-			<label>Dot Qty: </label>
+			<label>Qty: </label>
 			<input value={val} onChange={handleChange} >
 			</input>
-			<label> * 2</label>
 		</form>
 	)
 }
