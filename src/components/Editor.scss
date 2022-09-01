@@ -1,12 +1,12 @@
-$editor-green: #00ff00ff;
-$dimming-red: #88000055;
-$dimming-red-light: #ffdddd55;
-$dimming-red-dark: #44000055;
-$dimming-red-more: #880000aa;
+$editor-green: #ffffffff;
+$dimming-red: #55555555;
+$dimming-red-light: #eeeeee55;
+$dimming-red-dark: #33333355;
+$dimming-red-more: #555555aa;
 $trx: #00000000;
-$editor-green-light: #ddffddff;
-$editor-green-dark: #008800ff;
-$editor-green-light-trx: #88ff8855;
+$editor-green-light: #eeeeeeff;
+$editor-green-dark: #333333ff;
+$editor-green-light-trx: #bbbbbb55;
 
 input {
   color: $editor-green-light;
@@ -76,6 +76,7 @@ input {
 
 label, .EC-label {
   font-size: 0.7em;
+  text-align: left;
 }
 
 //// mini-slider
@@ -124,7 +125,7 @@ label, .EC-label {
   
   /* for panels */
   .active:not(button) {
-    display: grid;
+    display: flex;
   }
   
   .not-active:not(button) {

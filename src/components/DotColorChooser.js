@@ -1,22 +1,13 @@
-import {useState} from 'react';
 import {useStoreState, useStoreActions} from 'easy-peasy';
 import ExpandingChooser from './ExpandingChooser';
 import './Editor.scss';
-import { colors, $pallette_1, $pallette_2 } from '../dotStyles';
+import { colors, $pallette_1, $pallette_2, $pallette_3 } from '../dotStyles';
 
 const DotColorChooser = (props) => {
 	const { layerNum, param } = props;
 	const color = useStoreState(state => state.dotSets[layerNum][param]);
 	const updateDotSet = useStoreActions(actions => actions.updateDotSet);
-	const getPallette = () => {
-		switch(param) {
-		case 'color': { return $pallette_1; break; }
-		case 'childColor': { return $pallette_2; break; }
-		default: {return $pallette_1; break; }
-		}
-	}
-
-	const pallette = getPallette();
+	const pallette = $pallette_3;
 
 	const update = (newVal) => {
 		updateDotSet({param: param, index: layerNum, value: newVal});

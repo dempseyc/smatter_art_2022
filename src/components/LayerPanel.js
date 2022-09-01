@@ -3,6 +3,7 @@ import BlendModeChooser from './BlendModeChooser'
 import DotSizeChooser from './DotSizeChooser'
 import DotQtyChooser from './DotQtyChooser'
 import DotColorChooser from './DotColorChooser'
+import DotStyleChooser from './DotStyleChooser'
 import './Editor.scss'
 
 const LayerPanel = (props) => {
@@ -18,14 +19,15 @@ const LayerPanel = (props) => {
 			// dotQty= {data.layers[layerNum-1].dotQty}
 			// data= {data}
 		/>
-		{/* <BlendModeChooser
-			layerNum= {layerNum}
-			// data={data}
-			// blendModes={data.blendModes}
-		/> */}
 		<DotSizeChooser
 			layerNum= {layerNum}
 			param="size"
+		/>
+		<br></br>
+		<DotStyleChooser
+			key="style"
+			param="style"
+			layerNum={layerNum}
 		/>
 		<br></br>
 		<DotColorChooser
@@ -35,13 +37,9 @@ const LayerPanel = (props) => {
 
 		/>
 		<br></br>
-		<DotSizeChooser
-			layerNum= {layerNum}
-			param="childShrink"
-		/>
 		<DotColorChooser
 			key="dcc-2"
-			param="childColor"
+			param="color2"
 			layerNum={layerNum}
 		/>
 	</div>

@@ -1,32 +1,37 @@
 import { createStore, action, computed } from 'easy-peasy'
-import { sizes, childShrinks, colors } from './dotStyles'
+import { sizes, colors, styles } from './dotStyles'
 import utils from './utils'
 
 const half_minQty = 2;
 const half_maxQty = 20;
 const maxDotSets = 5;
+let setId = 0;
 
 const newDotSet = () => {
+  let ranNum = utils.ranMM(1,3);
+  let sizeNum = utils.ranMM(0, sizes.length);
+  let exp = sizes.length-1-sizeNum;
+  let qty = Math.floor(Math.pow(1.5,exp))*2*ranNum;
+  let myId = setId;
+  setId += 1;
   return {
-      qty: utils.ranMMexp(half_minQty,half_maxQty)*2,
-      size: sizes[utils.ranMM(0, sizes.length-1)],
-      color: utils.ranMM(0, colors.length-1),
-      childColor: utils.ranMM(0, colors.length-1),
-      childShrink: childShrinks[utils.ranMM(0, childShrinks.length-1)],
+      id: myId,
+      qty: qty,
+      size: sizes[sizeNum],
+      color: utils.ranMM(0, colors.length),
+      color2:  utils.ranMM(0, colors.length),
+      style: utils.ranMM(0, styles.length),
       behavior: 'global',
   };
 }
 
 const bySet = function (dots) {
-    let sets = {0:[],1:[],2:[],3:[],4:[]};
-    // wanting to look like { 0: [<array of dots>], 2: [<another array of dots>] }
+    let sets = {};
     dots.forEach( (dot, index) => {
-      // dot.index = index;
-      sets[`${dot.dotSetIndex}`] = [...sets[`${dot.dotSetIndex}`], {index: index, id: dot.id}];
+      if (!sets.hasOwnProperty(dot.setId)) { sets[dot.setId] = []; }
+      sets[`${dot.setId}`] = [...sets[`${dot.setId}`], {index: index, id: dot.id}];
     });
-    console.log('bySet',sets);
     return sets;
-
 }
 
 export default createStore({
@@ -34,8 +39,7 @@ export default createStore({
     animOn: false,
     startAnim: action ((state) => { state.animOn = true }),
     stopAnim: action ((state) => { state.animOn = false }),
-    dotSets: [newDotSet(),newDotSet(),newDotSet()
-    ],
+    dotSets: [newDotSet(),newDotSet(),newDotSet()].sort((s,s2)=>s2.size - s.size),
     dotData: [],
     qtyChanging: {status:false, setId:0},
     updateQtyChanging: action ((state, payload) => { 
@@ -47,14 +51,14 @@ export default createStore({
     
     addDotSet: action ((state, payload) => { 
       if (payload < maxDotSets) {
-        state.dotSets = [...state.dotSets, newDotSet()];
-        state.qtyChanging = {status: true, setId: payload};
+        let newSet = newDotSet()
+        state.dotSets = [...state.dotSets, newSet];
+        state.qtyChanging = {status: true, setId: newSet.id};
       }
     }),
     removeDotSet: action ((state,payload) => {
       if (state.dotSets[payload]) {
         state.dotSets = state.dotSets.filter((s,i)=> i !== payload );
-        state.qtyChanging = {status: true, setId: payload};
       }
     }),
     updateDotSet: action ((state, payload) => { state.dotSets[payload.index][payload.param] = payload.value }),

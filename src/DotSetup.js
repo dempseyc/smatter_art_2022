@@ -1,4 +1,4 @@
-export function makeDotData(dotQty = 10, setIndex = 0, nextIdx = 0, prevQty = 0) {
+export function makeDotData(dotQty = 10, setId = 0, nextIdx = 0, prevQty = 0) {
 
     let ranPos = (min, max) => Math.floor(Math.random() * max) + min ;
 
@@ -9,10 +9,10 @@ export function makeDotData(dotQty = 10, setIndex = 0, nextIdx = 0, prevQty = 0)
 
     let dotData = [];
 
-    let addDot = function (i, setIndex, x, y, xTwin) {
+    let addDot = function (i, setId, x, y, xTwin) {
         dotData.push({
             id: i,
-            dotSetIndex: setIndex,
+            setId: setId,
             strategy: (!xTwin) ? 'stay' : 'orth',
             xOrig: x,
             yOrig: y,
@@ -29,13 +29,13 @@ export function makeDotData(dotQty = 10, setIndex = 0, nextIdx = 0, prevQty = 0)
         if ( twinEatsTwin(xPos,xPosT) ) {
             xPos = 50;
             let yPosT = 100 - yPos;
-            addDot(nextIdx+i, setIndex, xPos, yPos, false);
-            addDot(nextIdx+i+1, setIndex, xPos, yPosT, false);
+            addDot(nextIdx+i, setId, xPos, yPos, false);
+            addDot(nextIdx+i+1, setId, xPos, yPosT, false);
             i++
         } else {
-            addDot(nextIdx+i, setIndex, xPos, yPos, true);
+            addDot(nextIdx+i, setId, xPos, yPos, true);
             // this is the twin
-            addDot(nextIdx+i+1, setIndex, xPosT, yPos, true);
+            addDot(nextIdx+i+1, setId, xPosT, yPos, true);
             // not a mistake, skip an iteration
             i++;
         }
@@ -45,7 +45,7 @@ export function makeDotData(dotQty = 10, setIndex = 0, nextIdx = 0, prevQty = 0)
 
 } // end makeDotData
 
-export function removeDotData(dotQty = -1, setIndex = 0, dots) {
+export function removeDotData(dotQty = -1, setId = 0, dots) {
     let toRemove = dotQty;
     let dotData = [...dots];
 
@@ -58,7 +58,7 @@ export function removeDotData(dotQty = -1, setIndex = 0, dots) {
     }
 
     let removeRecursive = () => {
-        dotData = remove(dotData,'dotSetIndex',setIndex);
+        dotData = remove(dotData,'setId',setId);
         toRemove++;
         if (toRemove !== 0) {
             removeRecursive();
@@ -67,17 +67,6 @@ export function removeDotData(dotQty = -1, setIndex = 0, dots) {
     }
     dotData = removeRecursive();
     return dotData;
-}
-
-export function newDotSet() {
-    return (
-        {
-            qty: 10,
-            size: 3,
-            color: 'black',
-            behavior: 'global',
-        }
-    )
 }
 
 export function findNs (currDot, dotsToConsider) {
@@ -97,54 +86,23 @@ export function findNs (currDot, dotsToConsider) {
         let iNyDistance = Math.abs(currDot.yPos - dot.yPos);
         let iNDistanceSqrd = squareNum(iNxDistance) + squareNum(iNyDistance);
         // if it's not me
-        if (dot.id !== currDot.id) {
-            // and i'm not a center dot
-            if (currDot.xTwin) {                
-                if (typeof(currDot.nn2) === 'undefined') {
-                    // console.log('should happen once per dot', typeof(currDot.nn2));
-                    currDot.nn2 = dot.id;
-                    currDot.nn3 = dot.id;
-                    // nn2DistanceSqrd = 0;
-                    currDot.nn1 = dot.id;
-                    nn1DistanceSqrd = iNDistanceSqrd;
-    
-                }
-    
-                if (iNDistanceSqrd <= nn1DistanceSqrd) {
-                    // console.log('passed nn1 qualification')
-                    currDot.nn1 = dot.id;
-                    nn1DistanceSqrd = iNDistanceSqrd;
-                }
-                // if i am a center dot, do stuff for all dots not also center dots
-            } else {
-                if (dot.xTwin) {
-                    if (typeof(currDot.nn2) === 'undefined') {
-                        // console.log('should happen once per dot', typeof(currDot.nn2));
-                        currDot.nn2 = dot.id;
-                        currDot.nn3 = dot.id;
-                        // nn2DistanceSqrd = 0;
-                        currDot.nn1 = dot.id;
-                        nn1DistanceSqrd = iNDistanceSqrd;
-        
-                    }
-        
-                    if (iNDistanceSqrd <= nn1DistanceSqrd) {
-                        // console.log('passed nn1 qualification')
-                        currDot.nn1 = dot.id;
-                        nn1DistanceSqrd = iNDistanceSqrd;
-                    }
-                }
+        if (dot.id !== currDot.id) {      
+            if (typeof(currDot.nn2) === 'undefined') {
+                // console.log('should happen once per dot', typeof(currDot.nn2));
+                currDot.nn2 = dot.id;
+                currDot.nn3 = dot.id;
+                // nn2DistanceSqrd = 0;
+                currDot.nn1 = dot.id;
+                nn1DistanceSqrd = iNDistanceSqrd;
+
             }
-            // and nn2has not been set, set both
+            if (iNDistanceSqrd <= nn1DistanceSqrd) {
+                // console.log('passed nn1 qualification')
+                currDot.nn1 = dot.id;
+                nn1DistanceSqrd = iNDistanceSqrd;
+            }
         }
     });
-    // the nn1 should have been set to second twin with '<=', so make nn 2 first twin
-    if (!currDot.xTwin) {
-        currDot.nn2 = currDot.nn1-1;
-        currDot.nn3 = currDot.id;
-        // and exit
-        return currDot;
-    }
 
     // find nn2
     dTC.forEach((dot) => {
@@ -152,7 +110,7 @@ export function findNs (currDot, dotsToConsider) {
         let iNyDistance = Math.abs(currDot.yPos - dot.yPos);
         let iNDistanceSqrd = squareNum(iNxDistance) + squareNum(iNyDistance);
         // if it's not me and not nn1
-        if (dot.id !== currDot.id && dot.id !== dot.nn1) {
+        if (dot.id !== currDot.id && dot.id !== currDot.nn1) {
             if (nn2DistanceSqrd > iNDistanceSqrd && iNDistanceSqrd >= nn1DistanceSqrd) {
             // console.log('passed nn2qualification')
             currDot.nn2 = dot.id;
@@ -174,6 +132,8 @@ export function findNs (currDot, dotsToConsider) {
             }
         }
     });
+
+    currDot.nn1DistanceSqrd = nn1DistanceSqrd;
 
     return currDot;
 

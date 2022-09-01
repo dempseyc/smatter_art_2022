@@ -28,7 +28,8 @@ function useIsSettled(value, delay = 1500) {
 const DotQtyChooser = (props) => {
 	const {layerNum} = props;
 	const qty = useStoreState(state => state.dotSets[layerNum].qty);
-	const setQty = useStoreActions(actions => actions.updateQty);
+	const setId = useStoreState(state => state.dotSets[layerNum].id);
+	const updateQty = useStoreActions(actions => actions.updateQty);
 	const stopAnim = useStoreActions(actions => actions.stopAnim);
 	const [val, setVal] = useState(qty);
 	const isValueSettled = useIsSettled(val,1500);
@@ -39,8 +40,8 @@ const DotQtyChooser = (props) => {
 	useEffect(() => {
 		if (isValueSettled && (qty !== val)) {
 			stopAnim();
-			updateQtyChanging({status: true, setId: layerNum});
-			setQty({index: layerNum, val: val});
+			updateQtyChanging({status: true, setId: setId});
+			updateQty({index: layerNum, val: val});
 		}
 	},[val, isValueSettled])
 	

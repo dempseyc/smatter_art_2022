@@ -1,17 +1,11 @@
 import {useStoreState, useStoreActions} from 'easy-peasy';
 import MiniSlider from './MiniSlider';
 import './Editor.scss';
-import { sizes, childShrinks } from '../dotStyles';
+import { sizes } from '../dotStyles';
 
 const DotSizeChooser = (props) => {
 	const {layerNum, param} = props;
-	const values = (() => {
-		switch(param) {
-			case 'size': { return sizes; break; }
-			case 'childShrink' : { return childShrinks; break; }
-			default: { break; }
-		}
-	})();
+	const values = sizes;
 	const size = useStoreState(state => state.dotSets[layerNum][param]);
 	const updateDotSet = useStoreActions(actions => actions.updateDotSet);
 	const val = values.indexOf(size);

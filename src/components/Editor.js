@@ -5,7 +5,7 @@ import LayerPanel from './LayerPanel'
 import './Editor.scss'
 
 const Editor = (props) => {
-    const {numLayers, editorMode } = props;
+    const {numLayers} = props;
     const activeLayer = useStoreState(state => state.editorState.activeLayer);
     const updateActiveLayer = useStoreActions(actions => actions.updateActiveLayer);
     const editMode = useStoreState( state => state.editMode);
