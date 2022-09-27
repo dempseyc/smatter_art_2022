@@ -1,4 +1,4 @@
-import React from 'react'
+import {useRef} from 'react'
 
 import {useStoreState} from 'easy-peasy'
 import Shape from './Shape'
@@ -7,16 +7,22 @@ import './Dot.css';
 
 const Dot = (props) => {
 	const { color, color2, style, size, index } = props;
-
+    
 	const xPos = useStoreState(state => state.dotData[index].xPos);
 	const yPos = useStoreState(state => state.dotData[index].yPos);
     const dot = useStoreState(state => state.dotData[index]);
-
+    
     let rot = (dot.xTwin) ? Math.atan2(dot.v1.y,dot.v1.x)*180/Math.PI + 90 : 90;
+
+    if (Number.isNaN(xPos+yPos+rot) ) {
+        console.log('error', dot);
+    }
 
 	return (
         <>
-        <Shape 
+        <Shape
+        key={index}
+        className={`${dot.id} ${dot.strategy}`}
         style={style}
         color={color}
         color2={color2}

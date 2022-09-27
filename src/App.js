@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react'
 import './CSSreset.css';
 import './App.scss';
 
-import { makeDotData, findNs, removeDotData } from './DotSetup'
+import { makeDotData, findNs, removeDotData, setAvg, findTautonomy } from './DotSetup'
 import { setTargets, chooseStrategy, trackAnim } from './DotMover'
 
 import { useStoreState, useStoreActions } from 'easy-peasy';
@@ -14,32 +14,27 @@ import Animator from './Animator';
 const DataHandler = () => {
 	const dotData = useStoreState(state => state.dotData);
 	const dotsBySet = useStoreState(state => state.dotsBySet);
-	const minMove = 0.05/dotData.length;
-	const currMoveAmtSq = useRef();
+	const currStep = useRef(0);
 	const animOn = useStoreState(state => state.animOn);
 	const startAnim = useStoreActions(actions => actions.startAnim);
 	const stopAnim = useStoreActions(actions => actions.stopAnim);
     const updateDots = useStoreActions(actions => actions.updateDotData);
 
 	console.log('dh renders', animOn);
-	// replace with stop after 200steps
-	const computeCurrMoveAmtSq = (val) => {
-        if (currMoveAmtSq.current != undefined) {
-            if (currMoveAmtSq.current <= minMove) {
-				stopAnim();
-            } else {
-                currMoveAmtSq.current = (currMoveAmtSq.current + val) * 0.5 ;
-            }
-        } else { 
-            currMoveAmtSq.current = 1024;
-            computeCurrMoveAmtSq(val);
-        }
+
+	const trackCurrStep = () => {
+        if (currStep.current > 69) {
+			stopAnim();
+			currStep.current = 0;
+        }  else {
+			currStep.current += 1;
+		}
     }
 
 	const animate = () => {
 		let data = trackAnim(dotData);
-        computeCurrMoveAmtSq(data.distSq);
-		updateDots(data.dots);
+        trackCurrStep();
+		updateDots(data);
 	}
 
 	const updatedAt = useStoreState(state => state.updatedAt);
@@ -94,7 +89,7 @@ const DataHandler = () => {
 			if (prevQty !== currSet.qty) {
 				diff = currSet.qty - prevQty;
 				addOrRemoveDots(diff,currSet.id,prevQty);
-				currMoveAmtSq.current = 1024;
+				currStep.current = 0;
 				startAnim();
 			} 
 
@@ -127,9 +122,11 @@ const DotMaker2 = ({cb}) => {
 			dots = dots.concat(set);
 			nextIdx = nextIdx + set.length;
 		});
-			dots = dots.map(dot => findNs(dot,dots));
-			dots = dots.map(dot => setTargets(dot,dots));
-			dots = dots.map(dot => chooseStrategy(dot));
+		dots = dots.map(dot => findNs(dot,dots));
+		dots = dots.map(dot => findTautonomy(dot,dots));
+		dots = dots.map(dot => setTargets(dot,dots));
+		dots = dots.map(dot => chooseStrategy(dot));
+		dots = setAvg(dots);
 		initialize(dots);
 		updateNextIdx(nextIdx);
 	}
@@ -152,7 +149,7 @@ export default function App () {
 				<h1 className="App-title">SMATTER_art</h1>
 			</header>
 			{(!init) ? <DotMaker2 cb={cb}/> : <DataHandler />}
-			<Container init={init}/>
+			<Container init={init} setInit={setInit}/>
 		</div>
 	);
 }

@@ -1,11 +1,11 @@
 import { useStoreState } from 'easy-peasy';
-import { $pallette_1, $pallette_2, $pallette_3 } from '../dotStyles';
+import { $pallette_1, $pallette_2, $pallette_3, $pallette_4 } from '../dotStyles';
 import Dot from './Dot2'
 
 export default function DisplayLayer ({layerNum}) {
 	const setData = useStoreState( state => state.dotSets[layerNum] );
 	const dotsBySet = useStoreState( state => state.dotsBySet[setData.id]);
-	const colors = $pallette_3;
+	const colors = $pallette_4;
 	const color = colors[setData.color]
 	const color2 = colors[setData.color2]
 	

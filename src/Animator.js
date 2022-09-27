@@ -1,8 +1,4 @@
-import { useRef, useEffect, useState } from 'react'
-
-import { trackAnim } from './DotMover'
-
-import { useStoreState, useStoreActions } from 'easy-peasy';
+import { useRef, useEffect } from 'react'
 
 const delayFrame = 20; // ms 
 
@@ -33,7 +29,6 @@ const useAnimationFrame = callback => {
 
 export default function Animator (props) {
     const {effect} = props;
-    console.log('Animator');    
     useAnimationFrame(deltaTime => {
         effect();
     })

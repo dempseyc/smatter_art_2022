@@ -16,7 +16,9 @@ body::-webkit-scrollbar {
 }
 
 h1 {
+  text-align: right;
   font-size: 2em;
+  padding-right: 0.2em;
 }
 
 .App {
@@ -62,6 +64,10 @@ h1 {
     padding-bottom: calc(1em + env(safe-area-inset-bottom));
 }
 
+.blinking {
+  animation: blink 0.2s ease-in-out 0s infinite;
+}
+
 @media screen and (min-width:520px) {
     body {
         font-size: 3vw;
@@ -96,3 +102,8 @@ h1 {
     }
 }
 /* end media screen min 820 */
+
+@keyframes blink {
+  0% {opacity: 1;}
+  50% {opacity: 0.5;}
+}

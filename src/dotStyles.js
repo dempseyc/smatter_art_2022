@@ -5,7 +5,7 @@ export const blendModes = [
     "darken", 
     "opaque"
 ];
-export const styles = [0,1,2]
+export const styles = [0,1,2,3]
 
 const $cyan_025 = '#00dddd40';
 const $cyan_050 = '#00dddd80';
@@ -29,6 +29,21 @@ export const $pallette_1 = [
   $mage_100, $mage_075, $mage_050, $mage_025,
   $yell_100, $yell_075, $yell_050, $yell_025,
   $blac_100, $blac_075, $blac_050, $blac_025 ];
+
+export const $pallette_4 = [
+  "#555555",
+  "#dd00dd",
+  "#dddd00",
+  "#00dddd",
+  "#6e6e6e",
+  "#dd6edd",
+  "#dddd6e",
+  "#6edddd",
+  "#dddddd",
+  "#dda5dd",
+  "#dddda5",
+  "#a5dddd",
+]
 
 
 const $r_025 = '#dd000040';
@@ -74,7 +89,6 @@ export function color_well (numColors) {
       }
     }
   }
-  console.log(colors);
 
   let colorStrs = colors.map(c => {
     return `rgb(${(4-c[0])*55},${(4-c[1])*55},${(4-c[2])*55})`

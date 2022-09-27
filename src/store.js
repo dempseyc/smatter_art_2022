@@ -1,9 +1,7 @@
 import { createStore, action, computed } from 'easy-peasy'
-import { sizes, colors, styles } from './dotStyles'
+import { sizes, colors, styles, $pallette_4 } from './dotStyles'
 import utils from './utils'
 
-const half_minQty = 2;
-const half_maxQty = 20;
 const maxDotSets = 5;
 let setId = 0;
 
@@ -12,14 +10,15 @@ const newDotSet = () => {
   let sizeNum = utils.ranMM(0, sizes.length);
   let exp = sizes.length-1-sizeNum;
   let qty = Math.floor(Math.pow(1.5,exp))*2*ranNum;
+  // let qty = 8;
   let myId = setId;
   setId += 1;
   return {
       id: myId,
       qty: qty,
       size: sizes[sizeNum],
-      color: utils.ranMM(0, colors.length),
-      color2:  utils.ranMM(0, colors.length),
+      color: utils.ranMM(0, $pallette_4.length),
+      color2:  utils.ranMM(0, $pallette_4.length),
       style: utils.ranMM(0, styles.length),
       behavior: 'global',
   };
@@ -70,7 +69,6 @@ export default createStore({
     initDotData: action ((state, payload) => {
       state.updatedAt = Date.now();
       state.dotData = payload;
-      console.log(payload);
     }),
 
     reset: action ((state, payload) => {
@@ -78,6 +76,7 @@ export default createStore({
       state.animOn = false;
       state.updatedAt = Date.now();
       state.dotData = [];
+      state.dotSets = [newDotSet(),newDotSet(),newDotSet()].sort((s,s2)=>s2.size - s.size);
       console.log('reset');
     }),
     

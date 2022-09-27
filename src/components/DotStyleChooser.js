@@ -2,7 +2,7 @@ import {useStoreState, useStoreActions} from 'easy-peasy';
 import ExpandingChooser from './ExpandingChooser';
 import Shape from './Shape'
 import './Editor.scss';
-import { colors, $pallette_1, $pallette_2, $pallette_3, styles } from '../dotStyles';
+import { colors, $pallette_1, $pallette_2, $pallette_3, $pallette_4, styles } from '../dotStyles';
 
 const DotStyleChooser = (props) => {
 	const { layerNum, param } = props;
@@ -10,7 +10,7 @@ const DotStyleChooser = (props) => {
     const color2 = useStoreState(state => state.dotSets[layerNum].color2);
     const style = useStoreState(state => state.dotSets[layerNum].style);
 	const updateDotSet = useStoreActions(actions => actions.updateDotSet);
-	const pallette = $pallette_3;
+	const pallette = $pallette_4;
 
 	const update = (newVal) => {
 		updateDotSet({param: param, index: layerNum, value: newVal});

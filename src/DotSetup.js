@@ -23,8 +23,10 @@ export function makeDotData(dotQty = 10, setId = 0, nextIdx = 0, prevQty = 0) {
     }
 
     for(let i = 0; i<dotQty-1; i++) {
-        let yPos = ranPos(0,400)/4;
-        let xPos = ranPos(0,400)/8; //placing 1st twin on left
+        // let yPos = ranPos(0,400)/4;
+        // let xPos = ranPos(0,400)/8; //placing 1st twin on left
+        let yPos = ranPos(50,300)/4;
+        let xPos = ranPos(100,300)/8; //placing 1st twin on left
         let xPosT = 100 - xPos;
         if ( twinEatsTwin(xPos,xPosT) ) {
             xPos = 50;
@@ -138,3 +140,23 @@ export function findNs (currDot, dotsToConsider) {
     return currDot;
 
 } // end findNs
+
+export function findTautonomy(dot, dots) {
+    let firstCousin = dots[dot.nn1].nn1;
+    dot.secondCousin = dots[firstCousin].nn1;
+    dot.thirdCousin = dots[dot.secondCousin].nn1;
+    return dot;
+}
+
+export function setAvg(dots) {
+    let acc = 0;
+    dots.forEach(dot => {
+        acc = acc + dot.nn1DistanceSqrd;
+    })
+    const avg = Math.sqrt(acc / dots.length);
+    dots = dots.map(dot => {
+        dot.avg = avg;
+        return dot;
+    })
+    return dots;
+}

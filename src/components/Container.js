@@ -5,8 +5,9 @@ import { useStoreState, useStoreActions } from 'easy-peasy';
 import Display from './Display'
 import Editor from './Editor'
 import EditorToggle from './EditorToggle'
+import ResetButton from './ResetButton'
 
-export default function Container ({init}) {
+export default function Container ({init, setInit}) {
     const qtyChanging = useStoreState(state => state.qtyChanging.status);
     const numSets = useStoreState(state => state.dotSets.length);
 
@@ -19,8 +20,8 @@ export default function Container ({init}) {
         <Editor
             numLayers={numSets}
         />
-        <EditorToggle
-        />
+        <EditorToggle />
+        <ResetButton action={() => setInit(false)}/>
       </div>)
       
       : null
